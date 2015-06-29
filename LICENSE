@@ -1,4 +1,7 @@
-Copyright (c) 2015, sourceryinstitute
+AdHoc is distributed under the OSI-approved BSD 3-clause License:
+AdHoc -- an undordered set of 
+Copyright (c) 2015, Sourcery, Inc.
+Copyright (c) 2015, Sourcery Institute, DBA
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -11,9 +14,9 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of AdHoc nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
+* Neither the name of Sourcery, Inc., Sourcery Institute, DBA, nor the names 
+  of their contributors may be used to endorse or promote products derived 
+  from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
