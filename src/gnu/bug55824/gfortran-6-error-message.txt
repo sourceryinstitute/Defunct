@@ -1,0 +1,11 @@
+ice-on-pack-unlimited-polymorphic.f90:4:0:
+
+     allocate(vector,source=pack(array,.true.))
+1
+internal compiler error: Segmentation fault: 11
+
+ice-on-pack-unlimited-polymorphic.f90:4:0: internal compiler error: Abort trap: 6
+gfortran: internal compiler error: Abort trap: 6 (program f951)
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <https://trac.macports.org/newticket> for instructions.
