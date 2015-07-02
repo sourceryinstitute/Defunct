@@ -1,5 +1,0 @@
-ice-on-pack-unlimited-polymorphic.f90:4:13:
-
-     allocate(vector,source=pack(array,.true.))
-             1
-Error: Array specification required in ALLOCATE statement at (1)
