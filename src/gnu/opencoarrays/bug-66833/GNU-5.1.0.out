@@ -1,0 +1,11 @@
+ice-on-assumed-rank-character.f90:3:0:
+
+   print *,rank(a) ! ICE (also for lbound, ubound, and c_loc)
+ 1
+internal compiler error: in gfc_conv_descriptor_dtype, at fortran/trans-array.c:251
+
+ice-on-assumed-rank-character.f90:3:0: internal compiler error: Abort trap: 6
+gfortran: internal compiler error: Abort trap: 6 (program f951)
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <https://trac.macports.org/newticket> for instructions.
