@@ -26,6 +26,8 @@ endif()
 #Report untested Fortran compiler unless explicitly directed to build all examples.
 if ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "GNU" )
   set(gfortran_compiler true)
+elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "PGI" )
+  set(portland_group_compiler true)
 else()
   message(WARNING 
     "*** Untested Fortran compiler detected: ${CMAKE_Fortran_COMPILER_ID}."
@@ -40,4 +42,7 @@ enable_testing()
 if("${gfortran_compiler}")
   add_compile_time_test(gnu-bug-55824 src/gnu/nasa/bug-55824 ice-on-pack-unlimited-polymorphic f90)
   add_compile_time_test(gnu-bug-66833 src/gnu/opencoarrays/bug-66833 ice-on-assumed-rank-character f90)
+elseif("${portland_group_compiler}")
+  add_compile_time_test(pgi-bug-21894 src/pgi/opencoarrays/bug-21894 no-c_ptrdiff_t f90)
+  add_compile_time_test(pgi-bug-xxxxx src/pgi/opencoarrays/bug-xxxxx save-bind-c-conflict f90)
 endif()

@@ -1,0 +1,2 @@
+PGF90-S-0084-Illegal use of symbol c_ptrdiff_t - not public entity of module (no-c_ptrdiff_t.f90: 1)
+  0 inform,   0 warnings,   1 severes, 0 fatal for MAIN
