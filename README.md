@@ -2,7 +2,7 @@
 [For better viewing, including hyperlinks, read it online at            ]:# 
 [https://github.com/sourceryinstitute/AdHoc/blob/master/README.md]:#
 
-# OpenCoarrays #
+# AdHoc #
 An unordered set of tests for modern Fortran compilers
 
 * [Overview]
