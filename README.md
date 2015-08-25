@@ -65,7 +65,7 @@ Please see the [CONTRIBUTING file].
 ## Acknowledgements</a> ##
 Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the following institutions:
 
-* [National Air and Space Administration] (NASA) under subcontract from [Science Systems and Applications Incorporated] (SSAI).
+* The National Air and Space Administration ([NASA]) under subcontract from Science Systems and Applications Incorporated ([SSAI]).
 * [Cray, Inc.] for computing time via its Marketing Partner Network.
 * [Portland Group] for a PGI Workstation license.
 * [Numerical Algorithms Group] (NAG) for a NAG Fortran compiler license.
@@ -99,8 +99,8 @@ Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the fo
 
 
 [Acknowledgements Section]:#
-[National Air and Space Administration]: http://www.nasa.gov
-[Science Systems and Applications Incorporated]: http://www.ssaihq.com
+[NASA]: http://www.nasa.gov
+[SSAI]: http://www.ssaihq.com
 [Cray, Inc.]: http://www.cray.com
 [Portland Group]: http://pgroup.com
 [Numerical Algorithms Group]: http://www.nag.com
