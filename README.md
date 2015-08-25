@@ -49,7 +49,7 @@ AdHoc produces no executable files or libraries other than those specified in th
 <a name="contributing">
 ## Contributing</a> ##
 
-Please see the [CONTRIBUTING] file.
+Please see the [CONTRIBUTING file].
 
 <a name="status">
 ## Status</a> ##
@@ -81,7 +81,7 @@ Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the fo
 [Contributing]: #contributing
 [Support]: #support
 [Acknowledgements]: #acknowledgements
-
+ 
 
 [Document Body]:#
 [OpenCoarrays]: http://www.opencoarrays.org
@@ -94,11 +94,11 @@ Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the fo
 [gfortran]: https://gcc.gnu.org/wiki/GFortran
 [Sourcery, Inc.]: http://www.sourceryinstitute.org
 [Sourcery Institute]: http://www.sourceryinstitute.org
-[CONTRIBUTING]: ./CONTRIBUTING
+[Contributing file]: ./CONTRIBUTING
 [Issues]: https://github.com/sourceryinstitute/AdHoc/issues
 
 
-[Acknowledgements]:#
+[Acknowledgements Section]:#
 [National Air and Spce Administration]: http://www.nasa.gov
 [Science Systems and Applications Incorporated]: http://www.ssaihq.com
 [Cray, Inc.]: http://www.cray.com
