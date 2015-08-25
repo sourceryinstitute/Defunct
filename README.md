@@ -99,7 +99,7 @@ Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the fo
 
 
 [Acknowledgements Section]:#
-[National Air and Spce Administration]: http://www.nasa.gov
+[National Air and Space Administration]: http://www.nasa.gov
 [Science Systems and Applications Incorporated]: http://www.ssaihq.com
 [Cray, Inc.]: http://www.cray.com
 [Portland Group]: http://pgroup.com
