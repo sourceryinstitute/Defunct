@@ -10,6 +10,7 @@ An unordered set of ad hoc tests for modern Fortran compilers.
 * [Prerequisites]
 * [Installation]
 * [Contributing]
+* [Support]
 * [Acknowledgements]
 
 ## <a name="overview">Overview</a> ##
@@ -55,11 +56,13 @@ Please see the [CONTRIBUTING] file.
 
 [AdHoc] current contains tests for the Intel and GNU compilers.  Consequently, these are the only compilers [AdHoc] recognizes at build time.  Support for additional compilers will be added as tests for the corresponding compilers is added.
 
-## <a name="support">Support</a> ##
+<a name="support">
+## Support</a> ##
 
 * Please submit bug reports and feature requests via our [Issues] page.
 
-## <a name="acknowledgements">Acknowledgements</a> ##
+<a name="acknowledgements">
+## Acknowledgements</a> ##
 Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the following institutions:
 
 * [National Air and Space Administration] (NASA) under subcontract from [Science Systems and Applications Incorporated] (SSAI).
@@ -76,6 +79,7 @@ Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the fo
 [Prerequisites]: #prerequisites
 [Installation]: #installation
 [Contributing]: #contributing
+[Support]: #support
 [Acknowledgements]: #acknowledgements
 
 
