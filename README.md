@@ -30,7 +30,7 @@ A primary motivation of the design of AdHoc lies in the need for tolerating comp
 * [CMake] 3.0 or higher (3.3.0 or higher preferred for robust detection of the compiler version)
 * A Fortran compiler.  
 
-Fortran 2003 specifies certain behavior and values that depend on the implementation of a companion C compiler.  The C compilelr need not be present to build AdHoc, but knowledge of which C compiler is the companion might be helpful in determining the corresponding behavior and values.  In most instances, the companion C compiler is the C compiler that is part of the compiler collection that includes the Fortran compiler being used.  In cases where the compiler vendor does not produce a C compiler, please refer to the vendor documentation for the identity of the companion C compiler.
+Fortran 2003 specifies certain behavior and values that depend on the implementation of a companion C compiler.  The C compiler need not be present to build AdHoc, but knowledge of which C compiler is the companion might be helpful in determining the corresponding behavior and values.  In most instances, the companion C compiler is the C compiler that is part of the compiler collection that includes the Fortran compiler being used.  In cases where the compiler vendor does not produce a C compiler, please refer to the vendor documentation for the identity of the companion C compiler.
 
 <a name="installation">
 ## Installation</a> ##
