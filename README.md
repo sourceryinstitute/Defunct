@@ -14,13 +14,13 @@ An unordered set of ad hoc tests for modern Fortran compilers.
 * [Acknowledgements]
 
 ## <a name="overview">Overview</a> ##
-[AdHoc] is an open-source software project that archives ad hoc tests for modern Fortran compilers used by Sourcery Institute, Sourcery, Inc., their collaborators, sponsors, and clients.   These tests emphasize support the Fortran 2003 and 2008 standards along with features proposed for Fortran 2015 in technical specification [TS 29113] Further Interoperability with C and the draft technical specification [TS 18508] Additional Parallel Features in Fortran.
+[AdHoc] is an open-source software project that archives ad hoc tests for modern Fortran compilers used by Sourcery Institute, Sourcery, Inc., their collaborators, sponsors, and clients.   These tests emphasize support for the Fortran 2003 and 2008 standards along with features proposed for Fortran 2015 in technical specification [TS 29113] Further Interoperability with C and the draft technical specification [TS 18508] Additional Parallel Features in Fortran.
 
 A primary motivation of the design of AdHoc lies in the need for tolerating compile-time errors during the building of the tests.  Inspired by Test-Driven Development (TDD), it is expected that every test committed to AdHoc initially fails and that the test therefore becomes a user specificiation against which the corresponding compiler team can build.  What makes AdHoc a bit unusual is that a large percentage of the failures are compile-time errors.  Compilation errors complicate TDD's traditional write-build-test-refactor development cycle because most build systems halt progress when a source file fails to compile.
 
 [AdHOc] addresses this scenario by delaying the test compilation to the post-build phase of the cycle.  At build time, AdHoc simply builds a script for compiling and running each test.  When the tests are run, source compilation failures are reported as test failures and the execution of the test suite continues onward to any subsequent tests.  [AdHoc] uses the [CMake] capability for detecting compiler identity and version to determine which tests to build. 
 
-(Another use case for test-phase compilation arises when the code must be pre-processed before being passed to the compiler.  This use case occurs with the compiler wrapper and program launcher in [OpenCoarrays], the project that spawned [AdHoc].)
+(Another use case for test-phase compilation arises when the code must be pre-processed before being passed to the compiler.  This use case occurs with the compiler wrapper in [OpenCoarrays], the project that spawned [AdHoc].)
 
 ## <a name="compatibility">Compatibility</a> ##
 [AdHoc] is intended to support any modern Fortran compiler for which it is desired to gather users requirements in the form of tests. Specific support for each compiler is added as tests for that compiler are added.
@@ -66,7 +66,7 @@ Please submit bug reports and feature requests via our [Issues] page.
 ## Acknowledgements</a> ##
 Sourcery Insitute and Sourcery, Inc., gratefully acknowledge support from the following institutions:
 
-* The National Air and Space Administration ([NASA]) under subcontract from Science Systems and Applications Incorporated ([SSAI]).
+* The National Aeronautics and Space Administration ([NASA]) under subcontract from Science Systems and Applications Incorporated ([SSAI]).
 * [Cray, Inc.] for computing time via its Marketing Partner Network.
 * [Portland Group] for a PGI Workstation license.
 * Numerical Algorithms Group ([NAG]) for a NAG Fortran compiler license.
