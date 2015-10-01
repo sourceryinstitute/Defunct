@@ -33,6 +33,3 @@ macro(add_compile_time_test name path base ext)
   add_test(NAME ${name} COMMAND "${path}/test-${base}.sh")
   set_property(TEST ${name} PROPERTY PASS_REGULAR_EXPRESSION "Test passed.")
 endmacro(add_compile_time_test)
-
-#add_compile_time_test(gnu-bug-55824 src/gnu/nasa/bug-55824 ice-on-pack-unlimited-polymorphic f90)
-#add_compile_time_test(gnu-bug-66833 src/gnu/opencoarrays/bug-66833 ice-on-assumed-rank-character f90)
