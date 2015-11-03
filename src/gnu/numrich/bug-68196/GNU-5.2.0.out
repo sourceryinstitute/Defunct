@@ -1,0 +1,4 @@
+gfortran: internal compiler error: Segmentation fault: 11 (program f951)
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <https://trac.macports.org/newticket> for instructions.
