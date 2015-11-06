@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 #Name project and specify version and languages
-project(adhoc VERSION 0.0.0 LANGUAGES C Fortran)
+project(AdHoc VERSION 0.0.0 LANGUAGES C Fortran)
 
 #Print an error message on an attempt to build inside the source directory tree:
 if ("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
@@ -28,14 +28,12 @@ if ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "GNU" )
   set(gfortran_compiler true)
 elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "PGI" )
   set(portland_group_compiler true)
-else()
-  message(WARNING 
-    "*** Untested Fortran compiler detected: ${CMAKE_Fortran_COMPILER_ID}."
-    "*** Building all tests.  Please report failures to damian@sourceryinstitute.com"
-  )
+elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "Cray" )
+  set(cray_compiler true)
 endif()
 
 include(AddCompileTimeTest.cmake)
+include(AddCMakeTest.cmake)
 
 enable_testing()
 
@@ -48,4 +46,14 @@ elseif("${portland_group_compiler}")
   add_compile_time_test(pgi-bug-21918-01 src/pgi/opencoarrays/bug-xxxxx save-bind-c f90)
   add_compile_time_test(pgi-bug-21918-02 src/pgi/opencoarrays/bug-xxxxy assumed-rank f90)
   add_compile_time_test(pgi-bug-21918-03 src/pgi/opencoarrays/bug-xxxxz do-concurrent f90)
+elseif("${cray_compiler}")
+  add_compile_time_test(cce-bug-821337 src/cce/nasa/bug-821337 generic-resolution f90)
+  add_cmake_test(cmake-bug-xxxxx src/cmake/bug-xxxxx)
+else()
+  message(FATAL_ERROR
+    "\n"
+    "${PROJECT_NAME} contains no tests for the ${CMAKE_Fortran_COMPILER_ID} Fortran compiler. "
+    "Please add tests in the top level CMakeLists.txt file and subimt a pull request or ask " 
+    "for assistance via our Issues page (https://github.com/sourceryinstitute/AdHoc/issues)"
+  )
 endif()

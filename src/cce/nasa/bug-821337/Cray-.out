@@ -1,0 +1,18 @@
+
+module Exception_mod
+       ^             
+ftn-855 crayftn: ERROR EXCEPTION_MOD, File = generic-resolution.f90, Line = 1, Column = 8 
+  The compiler has detected errors in module "EXCEPTION_MOD".  No module information file will be created for this module.
+
+     call this%throw(Exception()) ! this should resolve into a call to throwException
+              ^                                                                       
+ftn-389 crayftn: ERROR THROWMESSAGE, File = generic-resolution.f90, Line = 16, Column = 15 
+  No specific match can be found for the generic subprogram call "THROW".
+
+Cray Fortran : Version 8.4.0 (u84052f84233i84288p84437a84011e84007z84437)
+Cray Fortran :               (x8412r84005w84007t8415b84042)
+Cray Fortran : Fri Nov 06, 2015  13:16:33
+Cray Fortran : Compile time:  0.0040 seconds
+Cray Fortran : 18 source lines
+Cray Fortran : 2 errors, 0 warnings, 0 other messages, 0 ansi
+Cray Fortran : "explain ftn-message number" gives more information about each message.

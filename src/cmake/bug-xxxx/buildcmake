@@ -1,7 +1,0 @@
-#!/bin/bash
-version=3.3
-wget http://www.cmake.org/files/v$version/cmake-$version.0-1-src.tar.bz2 &&
-tar xvjf cmake-$version.0-1-src.tar.bz2 &&
-tar xvjf cmake-$version.0.tar.bz2 &&
-cd cmake-$version.0  &&
-./bootstrap --prefix=${PWD} >&1 | tee build.log

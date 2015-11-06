@@ -1,0 +1,15 @@
+-- The Fortran compiler identification is Cray
+-- Check for working Fortran compiler: /opt/cray/craype/2.4.2/bin/ftn
+-- Check for working Fortran compiler: /opt/cray/craype/2.4.2/bin/ftn  -- works
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Checking whether /opt/cray/craype/2.4.2/bin/ftn supports Fortran 90
+-- Checking whether /opt/cray/craype/2.4.2/bin/ftn supports Fortran 90 -- yes
+CMake Error at CMakeLists.txt:7 (message):
+  CMAKE_Fortran_COMPILER_VERSION, CMAKE_C_COMPILER_VERSION,
+  CMAKE_CXX_COMPILER_VERSION are all empty.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/users/p01923/AdHoc/build/src/cmake/bug-xxxxx/build/CMakeFiles/CMakeOutput.log".
+See also "/home/users/p01923/AdHoc/build/src/cmake/bug-xxxxx/build/CMakeFiles/CMakeError.log".
