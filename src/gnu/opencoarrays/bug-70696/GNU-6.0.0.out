@@ -1,0 +1,6 @@
+post_host_associated_event.f90:2:24:
+
+   type(event_type) :: x[*]
+                        1
+Fatal Error: Coarrays disabled at (1), use '-fcoarray=' to enable
+compilation terminated.

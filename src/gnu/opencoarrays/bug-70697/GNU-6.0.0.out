@@ -1,0 +1,6 @@
+tree.f90:3:24:
+
+   type(event_type) done[*]
+                        1
+Fatal Error: Coarrays disabled at (1), use '-fcoarray=' to enable
+compilation terminated.

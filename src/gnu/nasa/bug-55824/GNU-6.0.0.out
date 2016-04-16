@@ -1,7 +1,7 @@
 ice-on-pack-unlimited-polymorphic.f90:4:0:
 
      allocate(vector,source=pack(array,.true.))
-1
+ 
 internal compiler error: Segmentation fault: 11
 
 ice-on-pack-unlimited-polymorphic.f90:4:0: internal compiler error: Abort trap: 6

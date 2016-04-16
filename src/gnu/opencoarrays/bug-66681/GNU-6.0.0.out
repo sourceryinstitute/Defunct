@@ -1,0 +1,6 @@
+assign_this_image_to_complex.f90:1:10:
+
+ complex a[*]
+          1
+Fatal Error: Coarrays disabled at (1), use '-fcoarray=' to enable
+compilation terminated.
