@@ -45,7 +45,7 @@ Download AdHoc via git or as a [Zip file].  From inside a bash shall, issue comm
     make install
     ctest
 
-AdHoc produces no executable files or libraries other than those specified in the tests.  Thus, the above "make install" command simply constructs the scripts that actually compile and run the tests during the subsequent "ctest" command.  The scripts  write the test output back into the source tree using a name of the form <compiler-identity>-<compiler-version>.out.  If you are using git, you can determine whether the compiler results differ from the previously committed result by executing  "git diff", which produces no output if the contents of the test result files have not changed.
+AdHoc produces no executable files or libraries other than those specified in the tests.  Thus, the above "make install" command simply constructs the scripts that actually compile and run the tests during the subsequent "ctest" command.  The scripts  write the test output back into the source tree using a name of the form `<compiler-identity>-<compiler-version>.out`.  If you are using git, you can determine whether the compiler results differ from the previously committed result by executing  "git diff", which produces no output if the contents of the test result files have not changed.
 
 <a name="contributing">
 ## Contributing</a> ##
