@@ -12,3 +12,6 @@ contains
     pure module subroutine f
     end subroutine
 end submodule
+
+print *,"Test passed."
+end
