@@ -1,0 +1,35 @@
+$ ifort -c StringIntegerMap.F90 SeverityLevels.F90 foo.F90 
+
+$ ls -lt
+total 576
+-rw-rw-r-- 1 rouson rouson   1016 Aug 17 23:15 foo.o
+-rw-rw-r-- 1 rouson rouson    459 Aug 17 23:15 foo_mod.mod
+-rw-rw-r-- 1 rouson rouson  47352 Aug 17 23:15 SeverityLevels.o
+-rw-rw-r-- 1 rouson rouson  81787 Aug 17 23:15 pfl_severitylevels_mod.mod
+-rw-rw-r-- 1 rouson rouson 311152 Aug 17 23:15 StringIntegerMap.o
+-rw-rw-r-- 1 rouson rouson  64764 Aug 17 23:15 pfl_stringintegermap_mod.mod
+-rw-r--r-- 1 rouson rouson     75 Aug 15 12:34 foo.F90
+-rw-r--r-- 1 rouson rouson   2464 Aug 15 12:33 SeverityLevels.F90
+-rw-r--r-- 1 rouson rouson  64729 Aug 15 12:31 StringIntegerMap.F90
+
+$ ifort -V
+Intel(R) Fortran Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 17.0.0.042 Beta Build 20160315
+Copyright (C) 1985-2016 Intel Corporation.  All rights reserved.
+
+ifort: NOTE: The Beta evaluation period for this product ends on 7-oct-2016 UTC.
+rouson@sourcery-commercial:~/Desktop/ifort_16.0.3_logger_bloat$ rm *.o *.mod
+rouson@sourcery-commercial:~/Desktop/ifort_16.0.3_logger_bloat$ gfortran -c StringIntegerMap.F90 SeverityLevels.F90 foo.F90 
+rouson@sourcery-commercial:~/Desktop/ifort_16.0.3_logger_bloat$ ls -lt
+total 200
+-rw-rw-r-- 1 rouson rouson   936 Aug 17 23:16 foo.o
+-rw-rw-r-- 1 rouson rouson 11732 Aug 17 23:16 foo_mod.mod
+-rw-rw-r-- 1 rouson rouson  4624 Aug 17 23:16 SeverityLevels.o
+-rw-rw-r-- 1 rouson rouson 12082 Aug 17 23:16 pfl_severitylevels_mod.mod
+-rw-rw-r-- 1 rouson rouson 81160 Aug 17 23:16 StringIntegerMap.o
+-rw-rw-r-- 1 rouson rouson 12164 Aug 17 23:16 pfl_stringintegermap_mod.mod
+-rw-r--r-- 1 rouson rouson    75 Aug 15 12:34 foo.F90
+-rw-r--r-- 1 rouson rouson  2464 Aug 15 12:33 SeverityLevels.F90
+-rw-r--r-- 1 rouson rouson 64729 Aug 15 12:31 StringIntegerMap.F90
+
+$ gfortran --version
+GNU Fortran (Ubuntu 5.3.1-14ubuntu2) 5.3.1 20160413

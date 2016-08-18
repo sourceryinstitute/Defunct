@@ -1,0 +1,20 @@
+
+On August 16, 2016 at 5:30:52 AM, Clune, Thomas L. (GSFC-6101) (thomas.l.clune@nasa.gov) wrote:
+
+Hi Damian,
+
+Not sure there is an action in here for you, but thought you might at least be interested in this update.
+
+If you will recall, about 1 year ago I had to abandon a very promising project to create a Fortran “logger” facility.  It all worked well during testing with simple examples, but when we started using it in the climate model, the compilation time went to infinity.   After a bit more investigation, we found that the problem was correlated wit the fact that the .mod files were doubilng in size at each level up.
+
+After a couple of prompts in the last 2 weeks, I returned to this issue.     The good news is that the problem is much less severe in 16.0.3.    Now the .mod sizes saturate at ~ 1 MB, and the total compilation time is “only” 7x longer than without the handful of USE statements.    Looking under the hood, I’ve found that the Intel compiler is replicating some interface information for _every_ procedure anywhere down the USE hierarchy - even those that are private in their original module.  (private type-bound procedures, no less).     Presumably before, the exponential growth was due to not just keeping these around, but including an interface tidbit from each USE path.   
+
+Now comparing one very simple low level module between ifort and nag:   NAG is 1.2k,  ifort is 162k.   ~ 100x larger.
+
+The best news is that at least now it is straightforward to create a reproducer.    See the attached below.   Compile with 
+
+% ifort -c StringIntegerMap.F90 SeverityLevels.F90 foo.F90
+
+   We’ll see what Intel says in response.
+
+- Tom
