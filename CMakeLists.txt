@@ -30,6 +30,8 @@ elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "PGI" )
   set(portland_group_compiler true)
 elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "Cray" )
   set(cray_compiler true)
+elseif ("${CMAKE_Fortran_COMPILER_ID}" MATCHES "Intel" )
+  set(intel_compiler true)
 endif()
 
 include(AddCompileTimeTest.cmake)
@@ -55,6 +57,8 @@ elseif("${portland_group_compiler}")
 elseif("${cray_compiler}")
   add_compile_time_test(cce-bug-821337 src/cce/nasa/bug-821337 generic-resolution f90)
   add_cmake_test(cmake-bug-xxxxx src/cmake/bug-xxxxx)
+elseif("${intel_compiler}")
+  add_compile_time_test(intel-issue-DPD200416083 src/intel/issue-DPD200416083 oop-caf f90)
 else()
   message(FATAL_ERROR
     "\n"
