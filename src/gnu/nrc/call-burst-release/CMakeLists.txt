@@ -26,11 +26,10 @@ endif()
 add_library( bugger
   FissionGas.f90
   Mesh.f90
-  Functions.f90
+  FGR_Mesh.f90
   Grid.f90
   CoolantVars.f90
   GammaHeating.f90
-  FGR_Mesh.f90
   Refabrication.f90
   Variables.f90
   Conversions.f90

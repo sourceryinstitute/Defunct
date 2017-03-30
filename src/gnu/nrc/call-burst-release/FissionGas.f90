@@ -1,21 +1,16 @@
 MODULE FissionGas
     USE Kinds
-    USE Functions, ONLY : terp
     USE Variables, ONLY : ounit, na, rc, ngasr, ANS54_1982, Massih, FRAPFGR, ANS54_2011
-    USE FGR_Mesh, ONLY : scangas, IFBA_Coating
     IMPLICIT NONE
     
-    PRIVATE
-!   PUBLIC :: gaspro, fgasre, gasplt, totgas
-
 CONTAINS
     
     SUBROUTINE fgasre
     USE Conversions, ONLY : tfk, Pi
     USE Variables, ONLY : ProblemTime, ngasmod, tfuelr, nr, ngasr, crad, deltaz, na, angr, fmgr, hmgr, hemgp, fgmgp, Power, &
       &                   ang, rdotwrt, it, j, totl, angi, delbp, gasflg, nvoid, rdot, ah2ogr, ah2og, h2omi, EOSNodeBurnup
-    USE Mesh, ONLY : FGR_Elements, ZrB2
-    USE FGR_Mesh, ONLY : ans54_node, Massih_Node, FRAPFGR_node, fgr_node
+    USE Mesh, ONLY : FGR_Elements
+    USE FGR_Mesh, only : FRAPFGR_Node
     IMPLICIT NONE
     
     INTEGER(ipk) :: i, l, il, n, m, nrings
@@ -117,16 +112,6 @@ CONTAINS
             
             ! Call fission gas release model
             SELECT TYPE (FGR_Elements)
-            TYPE IS (FGR_Node)
-            CLASS IS (ANS54_Node)
-                SELECT CASE (ngasmod)
-                CASE (ANS54_1982)
-                    CALL ans54_1982_FGR (PelAvgBu, flxfc, FGR_Elements(:,:))
-                CASE (ANS54_2011)
-                    CALL ans54_2011_FGR (PelAvgBu, flxfc, FGR_Elements(:,:))
-                END SELECT
-            CLASS IS (Massih_Node)
-                CALL Massih_FGR (flxfc, FGR_Elements(:,:))
             CLASS IS (FRAPFGR_Node)
                 CALL frapfgr_FGR (flxfc, FGR_Elements(:,:))
                 
@@ -137,49 +122,7 @@ CONTAINS
                   CALL Burst_Release (j-1, FGR_Elements(j-1,:))
             END SELECT
             
-            ! Calculate helium production from ZrB2 coated IFBA rods
-            CALL ZrB2(j-1)%Calc_He_Prod(Power(j-1), gasflg)
         END IF
-        ! Calculation of the increment average gas fraction release of fission gas, helium, and nitrogen
-        fl = 0.0_r8k
-        flh = 0.0_r8k
-        fnn = 0.0_r8k
-        flh2o = 0.0_r8k
-        m = 2
-        IF (nvoid == 1) m = 3
-        DO il = m, nr
-            rr = -(crad(il,j-1) ** 2 - crad(il-1,j-1) ** 2) / 2.0_r8k
-            flh = flh + (fh(il,i) + fh(il-1,i)) * rr
-            fnn = fnn + (fn(il,i) + fn(il-1,i)) * rr
-            flh2o = flh2o + (fh2o(il,i) + fh2o(il-1,i)) * rr
-        END DO
-        nrings = nr - 1
-        IF (nvoid == 1) nrings = nrings - 1
-        rpstn = (crad(1,j-1) ** 2) * nrings
-        frd = rdot
-        ! Helium release
-        frdh = flh / rpstn
-        ! Nitrogen release
-        frdn = fnn / rpstn
-        ! Water release
-        frdh2o = flh2o / rpstn
-        ! Calculation of gas releases in moles
-        ! Fission gas release
-        fmgr(j-1,i) = frd * fgmgp(j-1,i)
-        ! Helium release
-        hmgr(j-1,i) = frdh * hemgp(j-1,i)
-        ! Helium release from IFBA
-        IF (i == 2) CALL ZrB2(j-1)%SaveIFBARel
-        ! Nitrogen release
-        angr(j-1,i) = frdn * angi / (totl / deltaz(j-1))
-        ! Water release
-        ah2ogr(j-1,i) = frdh2o * h2omi / (totl / deltaz(j-1))
     END DO
-    ang(j-1,2) = MAX((ang(j-1,1) - angr(j-1,2) + angr(j-1,1)), 0.0_r8k)
-    ah2og(j-1,2) = MAX((ah2og(j-1,1) - ah2ogr(j-1,2) + ah2ogr(j-1,1)), 0.0_r8k)
-    
-    ! Capture rdot for printing out
-    rdotwrt(j-1) = rdot
-    !
     END SUBROUTINE fgasre
 END MODULE FissionGas
