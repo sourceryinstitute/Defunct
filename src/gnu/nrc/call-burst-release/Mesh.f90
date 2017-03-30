@@ -3,7 +3,6 @@ MODULE Mesh
     USE Conversions
     USE FGR_Mesh, ONLY : FGR_Node, ANS54_Node, FRAPFGR_Node, Massih_Node, IFBA_Coating
     USE Variables, ONLY : nmesh
-    USE CoolantVars, ONLY : Coolant_Channel
     USE Grid_Index
 !   USE MatLib
     IMPLICIT NONE

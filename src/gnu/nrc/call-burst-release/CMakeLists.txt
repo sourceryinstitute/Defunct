@@ -28,7 +28,6 @@ add_library( bugger
   Mesh.f90
   FGR_Mesh.f90
   Grid.f90
-  CoolantVars.f90
   GammaHeating.f90
   Refabrication.f90
   Variables.f90
