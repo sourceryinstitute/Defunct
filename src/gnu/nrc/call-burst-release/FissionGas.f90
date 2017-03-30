@@ -1,4 +1,3 @@
-MODULE FissionGas
     IMPLICIT NONE
     TYPE :: FGR_Node
     END TYPE FGR_Node
@@ -16,4 +15,4 @@ CONTAINS
     SUBROUTINE Burst_Release (x)
     CLASS (FRAPFGR_Node), DIMENSION(:), INTENT(INOUT) :: x
     END SUBROUTINE Burst_Release
-END MODULE FissionGas
+END 
