@@ -25,7 +25,6 @@ endif()
 
 add_library( bugger
   FissionGas.f90
-  FGR_Mesh.f90
   Grid.f90
   GammaHeating.f90
   Refabrication.f90
