@@ -21,19 +21,33 @@ fi
 
 # Download and unpack MPICH
 version=3.1.4
-if [[ ! -f "mpich-${version}.tar.gz" ]]; then
-   wget http://www.mpich.org/static/downloads/${version}/mpich-${version}.tar.gz
+if [[ ! -d "mpich-${version}" ]]; then
+  if [[ ! -f "mpich-${version}.tar.gz" ]]; then
+     wget http://www.mpich.org/static/downloads/${version}/mpich-${version}.tar.gz
+  fi
+  tar xf mpich-${version}.tar.gz
 fi
-tar xf mpich-${version}.tar.gz
 
+MPI_INSTALL_DIR="${launch_dir}"/prerequisites/installations/mpich/${version}
+if [[ ! -x "${MPI_INSTALL_DIR}/bin/mpiexec" ]]; then
+  # Build MPICH
+  if [[ -d "mpich-build" ]]; then
+    rm -rf mpich-build
+  fi
+  mkdir mpich-build
+  pushd mpich-build
+    ../mpich-${version}/configure --prefix="${MPI_INSTALL_DIR}"
+    make install -j 4
+  popd
+fi
 
-# Build MPICH
-mkdir -p mpich-build
-pushd mpich-build
-  MPI_INSTALL_DIR="${launch_dir}"/prerequisites/installations/mpich/${version}
-  ../mpich-${version}/configure --prefix="${MPI_INSTALL_DIR}"
-  make install -j 4
-popd
+if [[ -z "${PATH}" ]]; then
+  echo "PATH=\"${MPI_INSTALL_DIR}\"/bin"
+  export PATH="${MPI_INSTALL_DIR}"/bin
+else
+  echo "PATH=\"${MPI_INSTALL_DIR}\"/bin:\"${PATH}]\""
+  export PATH="${MPI_INSTALL_DIR}"/bin:"${PATH}"
+fi
 
 # Build CMake issue reproducer
 mkdir -p demonstrate-issue
