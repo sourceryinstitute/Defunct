@@ -43,4 +43,14 @@ if ( (NOT MPI_C_FOUND) OR (NOT MPI_Fortran_FOUND) )
   find_package( MPI REQUIRED )
 endif()
 
-message(STATUS "MPIEXEC=${MPIEXEC}, MPI_Fortran_COMPILER=${MPI_Fortran_COMPILER} MPI_C_COMPILER=${MPI_C_COMPILER}")
+message(STATUS
+   "\n\n**********\n\n"
+   "CMake_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}\n"
+   "CMake_C_COMPILER=${CMAKE_C_COMPILER}\n"
+   "CMake_CXX_COMPILER=${CMAKE_CXX_COMPILER}\n"
+   "MPI_C_COMPILER=${MPI_C_COMPILER}\n"
+   "MPI_Fortran_COMPILER=${MPI_Fortran_COMPILER}\n"
+   "MPI_CXX_COMPILER=${MPI_CXX_COMPILER}\n"
+   "MPIEXEC=${MPIEXEC}\n"
+   "\n\n**********\n\n"
+)
