@@ -58,7 +58,10 @@ pushd demonstrate-issue
      exit "MPI is not in the expected location: ${MPI_INSTALL_DIR}"
   fi
 
-=======
+# Exit on error or unset variable.
+set -o errexit
+set -o nounset
+
 # Download and unpack MPICH
 version=3.1.4
 if [[ ! -d "mpich-${version}" ]]; then
@@ -115,6 +118,7 @@ pushd demonstrate-issue
   echo "   -DCMAKE_INSTALL_PREFIX=${PWD} \\"
   echo "   -DMPI_C_COMPILER=${MPICC} \\"
   echo "   -DMPI_Fortran_COMPILER=${MPIFC}"
+
 
   CC=${CC:-${MPICC}} FC=${FC:-${MPIFC}} cmake ${launch_dir} \
      -DCMAKE_INSTALL_PREFIX=${PWD} \

@@ -4,7 +4,7 @@ project(opencoarrays LANGUAGES C Fortran)
 
 #Print an error message on an attempt to build inside the source directory tree:
 if ("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-  message(FATAL_ERROR 
+  message(FATAL_ERROR
     "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
     " == CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}"
     "\nERROR: This archive does not support in-source builds:\n"
@@ -43,9 +43,6 @@ if ( (NOT MPI_C_FOUND) OR (NOT MPI_Fortran_FOUND) )
   find_package( MPI REQUIRED )
 endif()
 
-<<<<<<< HEAD
-message(STATUS "MPIEXEC=${MPIEXEC}, MPI_Fortran_COMPILER=${MPI_Fortran_COMPILER} MPI_C_COMPILER=${MPI_C_COMPILER}")
-=======
 message(STATUS
    "\n\n**********\n\n"
    "CMake_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}\n"
@@ -57,4 +54,3 @@ message(STATUS
    "MPIEXEC=${MPIEXEC}\n"
    "\n\n**********\n\n"
 )
->>>>>>> 15afa7a8bf4b172c21fa7f33eafa8baa67eb275d
