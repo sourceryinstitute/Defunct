@@ -1,5 +1,6 @@
 contains
-  subroutine print_storage_info(a)
-    class(*), contiguous :: a(:)
-  end subroutine
+  subroutine foo(x)
+    class(*), contiguous :: x(:)
+  end 
 end
+
