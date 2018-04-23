@@ -4,63 +4,6 @@ module emulated_collectives_interface
 
 contains
 
-    module subroutine co_sum_integer(a,result_image,stat,errmsg)
-      !! parallel computation of the sum of the first argument
-      implicit none
-      integer, intent(inout) :: a
-      integer, intent(in), optional :: result_image
-      integer, intent(out), optional ::  stat
-      character(len=*), intent(inout), optional :: errmsg
-
-     !! Binary tree collective sum reduction
-
-     integer, save :: total[*]
-     integer, parameter :: root=1
-
-     total = a
-
-     associate( me=>this_image() )
-
-       associate(even_child=>2*me)
-         if ( exists(even_child) ) then
-           sync images(even_child)
-           total = total + total[even_child]
-         end if
-       end associate
-
-       associate(odd_child=>2*me+1)
-         if ( exists(odd_child) ) then
-           sync images(odd_child)
-           total = total + total[odd_child]
-         end if
-       end associate
-
-       associate(parent=>me/2)
-         if (exists(parent)) sync images(parent)
-           !! start accumulation up the tree when the first childless image falls through this condition
-       end associate
-
-       if (me==root) a = total
-       if (present(result_image)) then
-         if (result_image/=root) then
-           if (me==root) sync images(result_image)
-           if (me==result_image) then
-             sync images(root)
-             a = total[root]
-           end if
-         end if
-       else
-         call co_broadcast_integer(total,source_image=root)
-         a=total
-       end if
-
-     end associate
-
-     if (present(errmsg)) errmsg=""
-     if (present(stat)) stat=0
-
-    end subroutine
-
     module subroutine co_broadcast_integer(a,source_image,stat,errmsg)
       !! parallel one-to-all communication of the value of first argument
       implicit none
@@ -123,78 +66,10 @@ contains
   end function
 
 end module
-module assertions_interface
+
+  use emulated_collectives_interface
   implicit none
-contains
-  elemental module subroutine assert(assertion,description,success)
-    use iso_fortran_env, only : error_unit
-    implicit none
-    logical, intent(in) :: assertion
-    character(len=*), intent(in) :: description
-    logical, intent(out), optional :: success
-    character(len=:), allocatable :: message
-    integer, parameter :: max_appended_characters=24
-    if (present(success)) success=assertion
-    if (.not.assertion) then
-      message = repeat(" ",ncopies=len(description)+max_appended_characters)
-      write(message,*) '(',description,') on image',this_image()
-      if (.not. present(success)) error stop "Assertion failed" // message
-    end if
-  end subroutine
-end module
-
-program main
-  use emulated_collectives_interface, only : co_sum_integer, co_broadcast_integer
-  use assertions_interface, only : assert
-  implicit none
-
-  associate( me=>this_image(), ni=>num_images() )
-
-   !call assert(ni>3,"test-emulated-collectives: at least 4 images required")
-
-    test_collective_broadcast: block
-      integer ::i, messenger, message
-
-      message=333
-      messenger=1
-      if (me==messenger) i=message
-      call co_broadcast_integer(i,source_image=messenger)
-      call assert(i==message,"integer message broadcast")
-
-      stop "stopped inside main"
-
-      message=666
-      messenger=4
-      if (me==messenger) i=message
-      call co_broadcast_integer(i,source_image=messenger)
-      call assert(i==message,"integer message broadcast")
-
-    end block test_collective_broadcast
-
-    test_collective_sum: block
-      integer ::i, image
-
-      image = me
-      call co_sum_integer(image,result_image=1)
-      if (me==1) call assert(image==sum([(i,i=1,ni)]),"collective integer sum reduction accumulated on image 1")
-
-      sync all
-
-      image = me
-      call co_sum_integer(image)
-      call assert(image==sum([(i,i=1,ni)]),"collective integer sum accumulated on all images")
-
-      sync all
-
-      image = me
-      call co_sum(image,result_image=2)
-      if (me==2) call assert(image==sum([(i,i=1,ni)]),"correct integer collective sum reduction")
-
-    end block test_collective_sum
-
-    sync all
-    if (me==1) print *,"Test passed."
-
-  end associate
-end program
-
+  integer message
+  if (this_image()==1) message=333
+  call co_broadcast_integer(message,source_image=1)
+end
