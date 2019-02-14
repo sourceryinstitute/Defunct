@@ -52,20 +52,44 @@ CONTAINS
             CASE ('I', 'i')
                 !! Integer
                 cnt%i = cnt%i + 1
-                CALL get_string_int(string, sep, ints(cnt%i))
+                BLOCK
+                  CHARACTER(LEN=:), ALLOCATABLE :: text
+                  IF (INDEX(string,sep) == 0) THEN
+                      text = string(1:)                    !! Read to end of string
+                  ELSE
+                      text = string(1:INDEX(string,sep)-1) !! Read until sep is found
+                  END IF
+                  READ(text,'(i8)') ints(cnt%i)           !! Store value
+                END BLOCK
             CASE ('R', 'r')
                 !! Real
                 cnt%r = cnt%r + 1
-                CALL get_string_real(string, sep, reals(cnt%r))
+                BLOCK
+                  CHARACTER(LEN=:), ALLOCATABLE :: text
+                  IF (INDEX(string,sep) == 0) THEN
+                      text = string(1:)                    !! Read to end of string
+                  ELSE
+                      text = string(1:INDEX(string,sep)-1) !! Read until sep is found
+                  END IF
+                  READ(text,'(es13.6)') reals(cnt%r) !! Store value
+                END BLOCK
             CASE ('C', 'c')
                 !! Character
                 cnt%c = cnt%c + 1
-                CALL get_string_char(string, sep, char)
-                chars(cnt%c) = char
+                IF (INDEX(string,sep) == 0) THEN
+                    chars(cnt%c) = string(1:)                    !! Read to end of string
+                ELSE
+                    chars(cnt%c) = string(1:INDEX(string,sep)-1) !! Read until sep is found
+                END IF
             END SELECT
-            CALL reduce_string (string, sep)
+
+            IF (INDEX(string,sep) == 0) THEN
+                string = ''
+            ELSE
+                string = ADJUSTL(string(INDEX(string,sep)+LEN(sep):))
+            END IF
             cnt%t = cnt%t + 1
-        END DO
+         END DO
 
         line = string
 
@@ -75,52 +99,7 @@ CONTAINS
         CHARACTER(LEN=:), ALLOCATABLE, INTENT(INOUT) :: string
         CHARACTER(LEN=*), INTENT(IN)  :: sep
 
-        IF (INDEX(string,sep) == 0) THEN
-            string = ''
-        ELSE
-            string = ADJUSTL(string(INDEX(string,sep)+LEN(sep):))
-        END IF
 
         END SUBROUTINE reduce_string
-
-        MODULE SUBROUTINE get_string_char (string, sep, name)
-        CHARACTER(LEN=*), INTENT(IN)  :: string, sep
-        CHARACTER(LEN=:), ALLOCATABLE, INTENT(OUT) :: name
-
-        IF (INDEX(string,sep) == 0) THEN
-            name = string(1:)                    !! Read to end of string
-        ELSE
-            name = string(1:INDEX(string,sep)-1) !! Read until sep is found
-        END IF
-
-        END SUBROUTINE get_string_char
-
-        MODULE SUBROUTINE get_string_int (string, sep, name)
-        CHARACTER(LEN=*), INTENT(IN)  :: string, sep
-        INTEGER(i4k),     INTENT(OUT) :: name
-        CHARACTER(LEN=:), ALLOCATABLE :: text
-
-        IF (INDEX(string,sep) == 0) THEN
-            text = string(1:)                    !! Read to end of string
-        ELSE
-            text = string(1:INDEX(string,sep)-1) !! Read until sep is found
-        END IF
-        READ(text,'(i8)') name                   !! Store value
-
-        END SUBROUTINE get_string_int
-
-        MODULE SUBROUTINE get_string_real (string, sep, name)
-        CHARACTER(LEN=*), INTENT(IN)  :: string, sep
-        REAL(r8k),        INTENT(OUT) :: name
-        CHARACTER(LEN=:), ALLOCATABLE :: text
-
-        IF (INDEX(string,sep) == 0) THEN
-            text = string(1:)                    !! Read to end of string
-        ELSE
-            text = string(1:INDEX(string,sep)-1) !! Read until sep is found
-        END IF
-        READ(text,'(es13.6)') name               !! Store value
-
-        END SUBROUTINE get_string_real
 
 END MODULE Misc
