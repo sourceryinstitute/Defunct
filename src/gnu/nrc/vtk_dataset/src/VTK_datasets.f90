@@ -14,7 +14,6 @@ MODULE vtk_datasets
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
         TYPE (coordinates) :: x, y, z
     CONTAINS
-        PROCEDURE :: rectlnr_grid_setup
         PROCEDURE :: rectlnr_grid_read
     END TYPE
 
@@ -85,21 +84,6 @@ MODULE vtk_datasets
         END DO get_coords
 
         END SUBROUTINE rectlnr_grid_read
-
-        MODULE SUBROUTINE rectlnr_grid_setup (me, dims, x_coords, y_coords, z_coords)
-        CLASS (rectlnr_grid),       INTENT(OUT) :: me
-        INTEGER(i4k), DIMENSION(3), INTENT(IN)  :: dims
-        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: x_coords, y_coords, z_coords
-
-        me%name       = 'RECTILINEAR_GRID'
-        me%dimensions = dims
-        me%y%datatype = me%x%datatype; me%z%datatype = me%x%datatype
-        me%x%coord    = x_coords
-        me%y%coord    = y_coords
-        me%z%coord    = z_coords
-        me%firstcall  = .FALSE.
-
-        END SUBROUTINE rectlnr_grid_setup
 
         LOGICAL MODULE FUNCTION diff(me, you)
         TYPE(rectlnr_grid), INTENT(IN) :: me, you

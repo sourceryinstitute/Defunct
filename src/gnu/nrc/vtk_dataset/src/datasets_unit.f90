@@ -6,9 +6,16 @@
     x(*) = [ 0.1_r8k, 0.2_r8k, 0.3_r8k, 0.4_r8k, 0.5_r8k, 0.6_r8k, 0.7_r8k, 0.8_r8k, 0.9_r8k, 1.0_r8k, 1.1_r8k ], &
     y(*) = [ 0.2_r8k, 0.4_r8k, 0.6_r8k, 0.8_r8k, 1.0_r8k, 1.2_r8k ], &
     z(*) = [ 0.5_r8k, 1.0_r8k, 1.5_r8k ]
-  CALL u%rectlnr_grid_setup([size(x),size(y),size(z)], x, y, z)
-  OPEN (20, file='rectlnr_grid.vtk', form='formatted')
 
+  u%name       = 'RECTILINEAR_GRID'
+  u%dimensions = [size(x),size(y),size(z)]
+  u%y%datatype = u%x%datatype; u%z%datatype = u%x%datatype
+  u%x%coord    = x
+  u%y%coord    = y
+  u%z%coord    = z
+  u%firstcall  = .FALSE.
+
+  OPEN (20, file='rectlnr_grid.vtk', form='formatted')
   WRITE(20,"('DATASET ',(a))") u%name
   WRITE(20,"('DIMENSIONS ',*(i0,' '))") u%dimensions
   WRITE(20,"('X_COORDINATES ',i0,' ',(a))") u%dimensions(1), u%x%datatype
