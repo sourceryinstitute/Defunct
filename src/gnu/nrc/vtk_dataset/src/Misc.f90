@@ -2,13 +2,6 @@ MODULE Misc
     USE ISO_FORTRAN_ENV, ONLY : i4k => INT32, i8k => INT64, r4k => REAL32, r8k =>REAL64
     IMPLICIT NONE
 
-    PRIVATE
-    PUBLIC :: interpret_string, def_len
-
-    INTERFACE get_string_value
-        PROCEDURE :: get_string_char, get_string_int, get_string_real
-    END INTERFACE
-
     INTEGER(i4k), PARAMETER :: def_len = 1000          !! Default character length for each line in file
 
 CONTAINS
@@ -59,15 +52,15 @@ CONTAINS
             CASE ('I', 'i')
                 !! Integer
                 cnt%i = cnt%i + 1
-                CALL get_string_value (string, sep, ints(cnt%i))
+                CALL get_string_int(string, sep, ints(cnt%i))
             CASE ('R', 'r')
                 !! Real
                 cnt%r = cnt%r + 1
-                CALL get_string_value (string, sep, reals(cnt%r))
+                CALL get_string_real(string, sep, reals(cnt%r))
             CASE ('C', 'c')
                 !! Character
                 cnt%c = cnt%c + 1
-                CALL get_string_value (string, sep, char)
+                CALL get_string_char(string, sep, char)
                 chars(cnt%c) = char
             END SELECT
             CALL reduce_string (string, sep)
