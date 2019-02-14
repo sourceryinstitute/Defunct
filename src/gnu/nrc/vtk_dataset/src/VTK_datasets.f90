@@ -17,8 +17,6 @@ MODULE vtk_datasets
         INTEGER(i4k), DIMENSION(3)    :: dimensions
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
     CONTAINS
-        PROCEDURE(abs_read),  DEFERRED, PUBLIC :: read
-        PROCEDURE(abs_write), DEFERRED, PUBLIC :: write
         PROCEDURE, NON_OVERRIDABLE, PUBLIC :: init
         PROCEDURE, PRIVATE :: check_for_diffs
         GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs
@@ -35,20 +33,6 @@ MODULE vtk_datasets
         PROCEDURE, PRIVATE :: setup => rectlnr_grid_setup
         PROCEDURE :: check_for_diffs => check_for_diffs_rectlnr_grid
     END TYPE rectlnr_grid
-
-    INTERFACE
-
-        MODULE SUBROUTINE abs_read (me, unit)
-        CLASS(dataset), INTENT(OUT) :: me
-        INTEGER(i4k),   INTENT(IN)  :: unit
-        END SUBROUTINE abs_read
-
-        MODULE SUBROUTINE abs_write (me, unit)
-        CLASS(dataset), INTENT(IN) :: me
-        INTEGER(i4k),   INTENT(IN) :: unit
-        END SUBROUTINE abs_write
-
-    END INTERFACE
 
     CONTAINS
 
