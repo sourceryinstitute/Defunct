@@ -95,11 +95,4 @@ CONTAINS
 
         END SUBROUTINE interpret_string
 
-        MODULE SUBROUTINE reduce_string (string, sep)
-        CHARACTER(LEN=:), ALLOCATABLE, INTENT(INOUT) :: string
-        CHARACTER(LEN=*), INTENT(IN)  :: sep
-
-
-        END SUBROUTINE reduce_string
-
 END MODULE Misc
