@@ -1,8 +1,6 @@
 add_executable( reproducer
   Precision.f90
-  Misc_interface.f90
-  Misc_implementation.f90
-  VTK_datasets_interface.f90
-  VTK_datasets_implementation.f90
+  Misc.f90
+  VTK_datasets.f90
   datasets_unit.f90
 )

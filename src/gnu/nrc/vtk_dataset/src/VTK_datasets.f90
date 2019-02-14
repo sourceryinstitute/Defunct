@@ -1,27 +1,62 @@
-SUBMODULE (vtk_datasets) vtk_datasets_implementation
-    USE Precision
+MODULE vtk_datasets
+    USE Precision, only : i4k, r8k
     IMPLICIT NONE
-    !>@brief
-    !> This module contains the dataset formats for vtk format
-    !>@author
-    !> Ian Porter
-    !>@date
-    !> 12/1/2017
-    !
-    ! The following dataset formats are available:
-    ! 1) Structured points
-    ! 2) Structured grid
-    ! 3) Rectilinear grid
-    ! 4) Polygonal data
-    ! 5) Unstructured grid
-    !
+
+    PRIVATE
+    PUBLIC :: rectlnr_grid
+
+    TYPE :: coordinates
+        CHARACTER(LEN=:),        ALLOCATABLE :: datatype
+        REAL(r8k), DIMENSION(:), ALLOCATABLE :: coord
+    END TYPE coordinates
+
+    TYPE, ABSTRACT :: dataset
+        PRIVATE
+        CHARACTER(LEN=:), ALLOCATABLE :: name
+        CHARACTER(LEN=:), ALLOCATABLE :: datatype
+        INTEGER(i4k), DIMENSION(3)    :: dimensions
+        LOGICAL, PUBLIC               :: firstcall = .TRUE.
+    CONTAINS
+        PROCEDURE(abs_read),  DEFERRED, PUBLIC :: read
+        PROCEDURE(abs_write), DEFERRED, PUBLIC :: write
+        PROCEDURE, NON_OVERRIDABLE, PUBLIC :: init
+        PROCEDURE, PRIVATE :: check_for_diffs
+        GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs
+    END TYPE dataset
+
+    TYPE, EXTENDS(dataset) :: rectlnr_grid
+        PRIVATE
+        TYPE (coordinates) :: x
+        TYPE (coordinates) :: y
+        TYPE (coordinates) :: z
+    CONTAINS
+        PROCEDURE :: read  => rectlnr_grid_read
+        PROCEDURE :: write => rectlnr_grid_write
+        PROCEDURE, PRIVATE :: setup => rectlnr_grid_setup
+        PROCEDURE :: check_for_diffs => check_for_diffs_rectlnr_grid
+    END TYPE rectlnr_grid
+
+    INTERFACE
+
+        MODULE SUBROUTINE abs_read (me, unit)
+        CLASS(dataset), INTENT(OUT) :: me
+        INTEGER(i4k),   INTENT(IN)  :: unit
+        END SUBROUTINE abs_read
+
+        MODULE SUBROUTINE abs_write (me, unit)
+        CLASS(dataset), INTENT(IN) :: me
+        INTEGER(i4k),   INTENT(IN) :: unit
+        END SUBROUTINE abs_write
+
+    END INTERFACE
 
     CONTAINS
-! ****************
-! Abstract dataset
-! ****************
 
-        MODULE PROCEDURE init
+        MODULE SUBROUTINE init (me, dims, x_coords, y_coords, z_coords)
+        CLASS(dataset), INTENT(OUT) :: me
+        INTEGER(i4k),        DIMENSION(3),   INTENT(IN), OPTIONAL :: dims
+        REAL(r8k),           DIMENSION(:),   INTENT(IN), OPTIONAL :: x_coords,  y_coords, z_coords
+
         !>@brief
         !> Initializes the dataset with information
 
@@ -31,10 +66,12 @@ SUBMODULE (vtk_datasets) vtk_datasets_implementation
         CLASS DEFAULT
             ERROR STOP 'Generic class not defined for vtkmofo class dataset'
         END SELECT
+        END SUBROUTINE init
 
-        END PROCEDURE init
+        MODULE FUNCTION check_for_diffs (me, you) RESULT (diffs)
+        CLASS(dataset), INTENT(IN) :: me, you
+        LOGICAL :: diffs
 
-        MODULE PROCEDURE check_for_diffs
         !>@brief
         !> Function checks for differences in a dataset
         !>@author
@@ -53,12 +90,15 @@ SUBMODULE (vtk_datasets) vtk_datasets_implementation
             diffs = .TRUE.
         END IF
 
-        END PROCEDURE check_for_diffs
+        END FUNCTION check_for_diffs
 ! ****************
 ! Rectilinear Grid
 ! ****************
-        MODULE PROCEDURE rectlnr_grid_read
+        MODULE SUBROUTINE rectlnr_grid_read (me, unit)
         USE Misc, ONLY : interpret_string, def_len
+        CLASS(rectlnr_grid), INTENT(OUT) :: me
+        INTEGER(i4k),        INTENT(IN)  :: unit
+
         !>@brief
         !> Reads the rectilinear grid dataset information from the .vtk file
 
@@ -119,9 +159,12 @@ SUBMODULE (vtk_datasets) vtk_datasets_implementation
         END DO get_coords
 
 100     FORMAT((a))
-        END PROCEDURE rectlnr_grid_read
+        END SUBROUTINE rectlnr_grid_read
 
-        MODULE PROCEDURE rectlnr_grid_write
+        MODULE SUBROUTINE rectlnr_grid_write (me, unit)
+        CLASS(rectlnr_grid), INTENT(IN) :: me
+        INTEGER(i4k),        INTENT(IN) :: unit
+
         !>@brief
         !> Writes the rectilinear grid dataset information to the .vtk file
 
@@ -141,9 +184,15 @@ SUBMODULE (vtk_datasets) vtk_datasets_implementation
 104     FORMAT ('Z_COORDINATES ',i0,' ',(a))
 110     FORMAT (*(es13.6))
 
-        END PROCEDURE rectlnr_grid_write
+        END SUBROUTINE rectlnr_grid_write
 
-        MODULE PROCEDURE rectlnr_grid_setup
+        MODULE SUBROUTINE rectlnr_grid_setup (me, dims, x_coords, y_coords, z_coords)
+        CLASS (rectlnr_grid),       INTENT(OUT) :: me
+        INTEGER(i4k), DIMENSION(3), INTENT(IN)  :: dims
+        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: x_coords
+        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: y_coords
+        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: z_coords
+
         !>@brief
         !> Sets up the rectilinear grid dataset with information
 
@@ -159,9 +208,13 @@ SUBMODULE (vtk_datasets) vtk_datasets_implementation
         me%z%coord    = z_coords
         me%firstcall  = .FALSE.
 
-        END PROCEDURE rectlnr_grid_setup
+        END SUBROUTINE rectlnr_grid_setup
 
-        MODULE PROCEDURE check_for_diffs_rectlnr_grid
+        MODULE FUNCTION check_for_diffs_rectlnr_grid (me, you) RESULT (diffs)
+        CLASS(rectlnr_grid), INTENT(IN) :: me
+        CLASS(dataset),      INTENT(IN) :: you
+        LOGICAL                         :: diffs
+
         !>@brief
         !> Function checks for differences in a rectilinear grid dataset
         INTEGER(i4k) :: i
@@ -206,5 +259,5 @@ SUBMODULE (vtk_datasets) vtk_datasets_implementation
             END SELECT
         END IF
 
-        END PROCEDURE check_for_diffs_rectlnr_grid
-END SUBMODULE vtk_datasets_implementation
+        END FUNCTION check_for_diffs_rectlnr_grid
+END MODULE vtk_datasets
