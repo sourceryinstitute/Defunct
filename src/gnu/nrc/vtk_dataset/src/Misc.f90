@@ -1,22 +1,14 @@
 MODULE Misc
     USE ISO_FORTRAN_ENV, ONLY : i4k => INT32, i8k => INT64, r4k => REAL32, r8k =>REAL64
     IMPLICIT NONE
-
-    INTEGER(i4k), PARAMETER :: def_len = 1000          !! Default character length for each line in file
-
 CONTAINS
-
         MODULE SUBROUTINE interpret_string (line, datatype, ignore, separator, reals, ints, chars)
-        !>@brief
-        !> Interprets a string (typically read from an input file) into a user-defined # of character and/or integer inputs
         CHARACTER(LEN=*), INTENT(INOUT) :: line
         CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: ignore, separator
         CHARACTER(LEN=1), DIMENSION(:), INTENT(IN) :: datatype
         INTEGER(i4k),     DIMENSION(:), ALLOCATABLE, OPTIONAL :: ints
         REAL(r8k),        DIMENSION(:), ALLOCATABLE, OPTIONAL :: reals
         CHARACTER(LEN=:), DIMENSION(:), ALLOCATABLE, OPTIONAL :: chars
-        !>@brief
-        !> Interprets a string (typically read from an input file) into a user-defined # of character and/or integer inputs
         INTEGER(i4k) :: i
         CHARACTER(LEN=:), ALLOCATABLE :: string, sep, char
         TYPE :: counter
@@ -46,7 +38,6 @@ CONTAINS
             IF (ALLOCATED(chars)) DEALLOCATE(chars)
             ALLOCATE(chars(1:SIZE(datatype)),source=string)
         END IF
-
         DO i = 1, SIZE(datatype)
             SELECT CASE (datatype(i))
             CASE ('I', 'i')
@@ -82,7 +73,6 @@ CONTAINS
                     chars(cnt%c) = string(1:INDEX(string,sep)-1) !! Read until sep is found
                 END IF
             END SELECT
-
             IF (INDEX(string,sep) == 0) THEN
                 string = ''
             ELSE
@@ -90,9 +80,6 @@ CONTAINS
             END IF
             cnt%t = cnt%t + 1
          END DO
-
         line = string
-
         END SUBROUTINE interpret_string
-
 END MODULE Misc
