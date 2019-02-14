@@ -57,12 +57,15 @@ CONTAINS
         DO i = 1, SIZE(datatype)
             SELECT CASE (datatype(i))
             CASE ('I', 'i')
+                !! Integer
                 cnt%i = cnt%i + 1
                 CALL get_string_value (string, sep, ints(cnt%i))
             CASE ('R', 'r')
+                !! Real
                 cnt%r = cnt%r + 1
                 CALL get_string_value (string, sep, reals(cnt%r))
             CASE ('C', 'c')
+                !! Character
                 cnt%c = cnt%c + 1
                 CALL get_string_value (string, sep, char)
                 chars(cnt%c) = char
@@ -73,7 +76,7 @@ CONTAINS
 
         line = string
 
-     CONTAINS
+        END SUBROUTINE interpret_string
 
         MODULE SUBROUTINE reduce_string (string, sep)
         CHARACTER(LEN=:), ALLOCATABLE, INTENT(INOUT) :: string
@@ -86,8 +89,6 @@ CONTAINS
         END IF
 
         END SUBROUTINE reduce_string
-
-     END SUBROUTINE interpret_string
 
         MODULE SUBROUTINE get_string_char (string, sep, name)
         CHARACTER(LEN=*), INTENT(IN)  :: string, sep

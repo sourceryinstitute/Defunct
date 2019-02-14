@@ -6,7 +6,7 @@
     x(*) = [ 0.1_r8k, 0.2_r8k, 0.3_r8k, 0.4_r8k, 0.5_r8k, 0.6_r8k, 0.7_r8k, 0.8_r8k, 0.9_r8k, 1.0_r8k, 1.1_r8k ], &
     y(*) = [ 0.2_r8k, 0.4_r8k, 0.6_r8k, 0.8_r8k, 1.0_r8k, 1.2_r8k ], &
     z(*) = [ 0.5_r8k, 1.0_r8k, 1.5_r8k ]
-  CALL u%rectlnr_grid_setup( dims=[size(x),size(y),size(z)], x_coords=x, y_coords=y, z_coords=z )
+  CALL u%rectlnr_grid_setup([size(x),size(y),size(z)], x, y, z)
   OPEN (unit=20, file='rectlnr_grid.vtk', form='formatted')
   CALL u%write(20)
   CLOSE(unit=20)

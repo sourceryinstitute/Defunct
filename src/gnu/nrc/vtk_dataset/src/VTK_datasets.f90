@@ -12,29 +12,62 @@ MODULE vtk_datasets
 
     TYPE, ABSTRACT :: dataset
         PRIVATE
-        CHARACTER(LEN=:), ALLOCATABLE :: name, datatype
+        CHARACTER(LEN=:), ALLOCATABLE :: name
+        CHARACTER(LEN=:), ALLOCATABLE :: datatype
         INTEGER(i4k), DIMENSION(3)    :: dimensions
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
+    CONTAINS
+        PROCEDURE, PRIVATE :: check_for_diffs
+        GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs
     END TYPE dataset
 
     TYPE, EXTENDS(dataset) :: rectlnr_grid
         PRIVATE
-        TYPE (coordinates) :: x, y, z
+        TYPE (coordinates) :: x
+        TYPE (coordinates) :: y
+        TYPE (coordinates) :: z
     CONTAINS
+        PROCEDURE :: rectlnr_grid_setup
         PROCEDURE :: read  => rectlnr_grid_read
         PROCEDURE :: write => rectlnr_grid_write
-        PROCEDURE :: rectlnr_grid_setup
-        PROCEDURE :: check_for_diffs_rectlnr_grid
-        GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs_rectlnr_grid
+        PROCEDURE :: check_for_diffs => check_for_diffs_rectlnr_grid
     END TYPE rectlnr_grid
 
     CONTAINS
 
+        MODULE FUNCTION check_for_diffs (me, you) RESULT (diffs)
+        CLASS(dataset), INTENT(IN) :: me, you
+        LOGICAL :: diffs
 
+        !>@brief
+        !> Function checks for differences in a dataset
+        !>@author
+        !> Ian Porter, NRC
+        !>@date
+        !> 12/18/2017
+
+        diffs = .FALSE.
+        IF      (.NOT. SAME_TYPE_AS(me,you))  THEN
+            diffs = .TRUE.
+        ELSE IF (me%name          /= you%name) THEN
+            diffs = .TRUE.
+        ELSE IF (me%dimensions(1) /= you%dimensions(1) .OR. &
+          &      me%dimensions(2) /= you%dimensions(2) .OR. &
+          &      me%dimensions(3) /= you%dimensions(3)) THEN
+            diffs = .TRUE.
+        END IF
+
+        END FUNCTION check_for_diffs
+! ****************
+! Rectilinear Grid
+! ****************
         MODULE SUBROUTINE rectlnr_grid_read (me, unit)
         USE Misc, ONLY : interpret_string, def_len
         CLASS(rectlnr_grid), INTENT(OUT) :: me
         INTEGER(i4k),        INTENT(IN)  :: unit
+
+        !>@brief
+        !> Reads the rectilinear grid dataset information from the .vtk file
 
         INTEGER(i4k)                     :: i, j, iostat
         INTEGER(i4k),        PARAMETER   :: dim = 3
@@ -61,8 +94,12 @@ MODULE vtk_datasets
             READ(unit,100,iostat=iostat) line
             CALL interpret_string (line=line, datatype=(/ 'I','C' /), ignore=descr_coord(i), separator=' ', ints=ints, chars=chars)
             SELECT CASE (i)
-            CASE (1:3)
+            CASE (1)
                 me%x%datatype = TRIM(chars(1))
+            CASE (2)
+                me%y%datatype = TRIM(chars(1))
+            CASE (3)
+                me%z%datatype = TRIM(chars(1))
             END SELECT
 
             READ(unit,100,iostat=iostat) line
@@ -75,8 +112,12 @@ MODULE vtk_datasets
                     j = j + 1
                     CALL interpret_string (line=line, datatype=(/ 'R' /), separator=' ', reals=reals)
                     SELECT CASE (i)
-                    CASE (1:3)
+                    CASE (1)
                         me%x%coord(j) = reals(1)
+                    CASE (2)
+                        me%y%coord(j) = reals(1)
+                    CASE (3)
+                        me%z%coord(j) = reals(1)
                     END SELECT
                     IF (line == '') EXIT get_vals
                 END DO get_vals
@@ -90,6 +131,9 @@ MODULE vtk_datasets
         MODULE SUBROUTINE rectlnr_grid_write (me, unit)
         CLASS(rectlnr_grid), INTENT(IN) :: me
         INTEGER(i4k),        INTENT(IN) :: unit
+
+        !>@brief
+        !> Writes the rectilinear grid dataset information to the .vtk file
 
         WRITE(unit,100) me%name
         WRITE(unit,101) me%dimensions
@@ -112,7 +156,12 @@ MODULE vtk_datasets
         MODULE SUBROUTINE rectlnr_grid_setup (me, dims, x_coords, y_coords, z_coords)
         CLASS (rectlnr_grid),       INTENT(OUT) :: me
         INTEGER(i4k), DIMENSION(3), INTENT(IN)  :: dims
-        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: x_coords, y_coords, z_coords
+        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: x_coords
+        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: y_coords
+        REAL(r8k),    DIMENSION(:), INTENT(IN)  :: z_coords
+
+        !>@brief
+        !> Sets up the rectilinear grid dataset with information
 
         IF (dims(1) /= SIZE(x_coords) .OR. dims(2) /= SIZE(y_coords) .OR. dims(3) /= SIZE(z_coords)) THEN
             ERROR STOP 'Bad inputs for rectlnr_grid_setup. Dims is not equal to size of coords.'
@@ -132,6 +181,9 @@ MODULE vtk_datasets
         CLASS(rectlnr_grid), INTENT(IN) :: me
         CLASS(dataset),      INTENT(IN) :: you
         LOGICAL                         :: diffs
+
+        !>@brief
+        !> Function checks for differences in a rectilinear grid dataset
         INTEGER(i4k) :: i
 
         diffs = .FALSE.
