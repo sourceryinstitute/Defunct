@@ -8,9 +8,9 @@
     z(*) = [ 0.5_r8k, 1.0_r8k, 1.5_r8k ]
   CALL u%rectlnr_grid_setup([size(x),size(y),size(z)], x, y, z)
   OPEN (unit=20, file='rectlnr_grid.vtk', form='formatted')
-  CALL u%write(20)
+  CALL u%rectlnr_grid_write(20)
   CLOSE(unit=20)
   OPEN (unit=20, file='rectlnr_grid.vtk', form='formatted', status='old')
-  CALL v%read(20)
-  PRINT*, u .diff. v," <-- should be F"
+  CALL v%rectlnr_grid_read(20)
+  PRINT*, u%check_for_diffs_rectlnr_grid(v)," <-- should be F"
 END

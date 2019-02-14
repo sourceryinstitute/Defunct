@@ -25,10 +25,9 @@ MODULE vtk_datasets
         TYPE (coordinates) :: z
     CONTAINS
         PROCEDURE :: rectlnr_grid_setup
-        PROCEDURE :: read  => rectlnr_grid_read
-        PROCEDURE :: write => rectlnr_grid_write
+        PROCEDURE :: rectlnr_grid_read
+        PROCEDURE :: rectlnr_grid_write
         PROCEDURE :: check_for_diffs_rectlnr_grid
-        GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs_rectlnr_grid
     END TYPE rectlnr_grid
 
     CONTAINS
