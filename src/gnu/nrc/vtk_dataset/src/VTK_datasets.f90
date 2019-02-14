@@ -13,15 +13,13 @@ MODULE vtk_datasets
         INTEGER(i4k), DIMENSION(3)    :: dimensions
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
         TYPE (coordinates) :: x, y, z
-    CONTAINS
-        PROCEDURE :: rectlnr_grid_read
     END TYPE
 
     CONTAINS
 
         MODULE SUBROUTINE rectlnr_grid_read (me, unit)
         USE Misc, ONLY : interpret_string, def_len
-        CLASS(rectlnr_grid), INTENT(OUT) :: me
+        TYPE(rectlnr_grid), INTENT(OUT) :: me
         INTEGER(i4k),        INTENT(IN)  :: unit
 
         !>@brief
@@ -85,10 +83,4 @@ MODULE vtk_datasets
 
         END SUBROUTINE rectlnr_grid_read
 
-        LOGICAL MODULE FUNCTION diff(me, you)
-        TYPE(rectlnr_grid), INTENT(IN) :: me, you
-        diff = merge(.TRUE.,.FALSE., &
-          ANY([me%x%datatype /= you%x%datatype, me%y%datatype /= you%y%datatype, me%z%datatype /= you%z%datatype]) &
-        )
-        END FUNCTION
-END MODULE vtk_datasets
+END MODULE
