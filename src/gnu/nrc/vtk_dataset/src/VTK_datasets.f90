@@ -15,9 +15,6 @@ MODULE vtk_datasets
         CHARACTER(LEN=:), ALLOCATABLE :: name, datatype
         INTEGER(i4k), DIMENSION(3)    :: dimensions
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
-    CONTAINS
-        PROCEDURE, PRIVATE :: check_for_diffs
-        GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs
     END TYPE dataset
 
     TYPE, EXTENDS(dataset) :: rectlnr_grid
@@ -27,27 +24,12 @@ MODULE vtk_datasets
         PROCEDURE :: read  => rectlnr_grid_read
         PROCEDURE :: write => rectlnr_grid_write
         PROCEDURE :: rectlnr_grid_setup
-        PROCEDURE :: check_for_diffs => check_for_diffs_rectlnr_grid
+        PROCEDURE :: check_for_diffs_rectlnr_grid
+        GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs_rectlnr_grid
     END TYPE rectlnr_grid
 
     CONTAINS
 
-        MODULE FUNCTION check_for_diffs (me, you) RESULT (diffs)
-        CLASS(dataset), INTENT(IN) :: me, you
-        LOGICAL :: diffs
-
-        diffs = .FALSE.
-        IF      (.NOT. SAME_TYPE_AS(me,you))  THEN
-            diffs = .TRUE.
-        ELSE IF (me%name          /= you%name) THEN
-            diffs = .TRUE.
-        ELSE IF (me%dimensions(1) /= you%dimensions(1) .OR. &
-          &      me%dimensions(2) /= you%dimensions(2) .OR. &
-          &      me%dimensions(3) /= you%dimensions(3)) THEN
-            diffs = .TRUE.
-        END IF
-
-        END FUNCTION check_for_diffs
 
         MODULE SUBROUTINE rectlnr_grid_read (me, unit)
         USE Misc, ONLY : interpret_string, def_len
