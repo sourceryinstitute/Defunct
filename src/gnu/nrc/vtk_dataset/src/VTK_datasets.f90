@@ -16,7 +16,6 @@ MODULE vtk_datasets
         INTEGER(i4k), DIMENSION(3)    :: dimensions
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
     CONTAINS
-        PROCEDURE, NON_OVERRIDABLE, PUBLIC :: init
         PROCEDURE, PRIVATE :: check_for_diffs
         GENERIC, PUBLIC :: OPERATOR(.diff.) => check_for_diffs
     END TYPE dataset
@@ -27,24 +26,11 @@ MODULE vtk_datasets
     CONTAINS
         PROCEDURE :: read  => rectlnr_grid_read
         PROCEDURE :: write => rectlnr_grid_write
-        PROCEDURE, PRIVATE :: setup => rectlnr_grid_setup
+        PROCEDURE :: rectlnr_grid_setup
         PROCEDURE :: check_for_diffs => check_for_diffs_rectlnr_grid
     END TYPE rectlnr_grid
 
     CONTAINS
-
-        MODULE SUBROUTINE init (me, dims, x_coords, y_coords, z_coords)
-        CLASS(dataset), INTENT(OUT) :: me
-        INTEGER(i4k),        DIMENSION(3),   INTENT(IN), OPTIONAL :: dims
-        REAL(r8k),           DIMENSION(:),   INTENT(IN), OPTIONAL :: x_coords,  y_coords, z_coords
-
-        SELECT TYPE (me)
-        CLASS IS (rectlnr_grid)
-            CALL me%setup(dims, x_coords, y_coords, z_coords)
-        CLASS DEFAULT
-            ERROR STOP 'Generic class not defined for vtkmofo class dataset'
-        END SELECT
-        END SUBROUTINE init
 
         MODULE FUNCTION check_for_diffs (me, you) RESULT (diffs)
         CLASS(dataset), INTENT(IN) :: me, you
