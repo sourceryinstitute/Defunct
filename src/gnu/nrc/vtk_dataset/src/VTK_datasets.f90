@@ -10,23 +10,17 @@ MODULE vtk_datasets
         REAL(r8k), DIMENSION(:), ALLOCATABLE :: coord
     END TYPE coordinates
 
-    TYPE, ABSTRACT :: dataset
+    TYPE :: rectlnr_grid
         PRIVATE
         CHARACTER(LEN=:), ALLOCATABLE :: name
         CHARACTER(LEN=:), ALLOCATABLE :: datatype
         INTEGER(i4k), DIMENSION(3)    :: dimensions
         LOGICAL, PUBLIC               :: firstcall = .TRUE.
-    END TYPE dataset
-
-    TYPE, EXTENDS(dataset) :: rectlnr_grid
-        PRIVATE
-        TYPE (coordinates) :: x
-        TYPE (coordinates) :: y
-        TYPE (coordinates) :: z
+        TYPE (coordinates) :: x, y, z
     CONTAINS
         PROCEDURE :: rectlnr_grid_setup
-        PROCEDURE :: rectlnr_grid_read
         PROCEDURE :: rectlnr_grid_write
+        PROCEDURE :: rectlnr_grid_read
         PROCEDURE :: check_for_diffs_rectlnr_grid
     END TYPE rectlnr_grid
 
@@ -150,7 +144,7 @@ MODULE vtk_datasets
 
         MODULE FUNCTION check_for_diffs_rectlnr_grid (me, you) RESULT (diffs)
         CLASS(rectlnr_grid), INTENT(IN) :: me
-        CLASS(dataset),      INTENT(IN) :: you
+        TYPE(rectlnr_grid),  INTENT(IN) :: you
         LOGICAL                         :: diffs
 
         !>@brief
@@ -167,8 +161,6 @@ MODULE vtk_datasets
           &      me%dimensions(3) /= you%dimensions(3)) THEN
             diffs = .TRUE.
         ELSE
-            SELECT TYPE (you)
-            CLASS IS (rectlnr_grid)
                 IF      (me%x%datatype /= you%x%datatype .OR. &
                   &      me%y%datatype /= you%y%datatype .OR. &
                   &      me%z%datatype /= you%z%datatype) THEN
@@ -194,7 +186,6 @@ MODULE vtk_datasets
                         END IF
                     END DO
                 END IF
-            END SELECT
         END IF
 
         END FUNCTION check_for_diffs_rectlnr_grid
