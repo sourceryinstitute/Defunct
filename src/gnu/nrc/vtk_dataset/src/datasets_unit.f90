@@ -1,4 +1,4 @@
-  USE vtk_datasets, ONLY : rectlnr_grid
+  USE vtk_datasets, ONLY : rectlnr_grid, diff
   USE Precision, ONLY : r8k
   IMPLICIT NONE
   TYPE(rectlnr_grid) u, v
@@ -7,10 +7,19 @@
     y(*) = [ 0.2_r8k, 0.4_r8k, 0.6_r8k, 0.8_r8k, 1.0_r8k, 1.2_r8k ], &
     z(*) = [ 0.5_r8k, 1.0_r8k, 1.5_r8k ]
   CALL u%rectlnr_grid_setup([size(x),size(y),size(z)], x, y, z)
-  OPEN (unit=20, file='rectlnr_grid.vtk', form='formatted')
-  CALL u%rectlnr_grid_write(20)
-  CLOSE(unit=20)
-  OPEN (unit=20, file='rectlnr_grid.vtk', form='formatted', status='old')
+  OPEN (20, file='rectlnr_grid.vtk', form='formatted')
+
+  WRITE(20,"('DATASET ',(a))") u%name
+  WRITE(20,"('DIMENSIONS ',*(i0,' '))") u%dimensions
+  WRITE(20,"('X_COORDINATES ',i0,' ',(a))") u%dimensions(1), u%x%datatype
+  WRITE(20,"(*(es13.6))") u%x%coord
+  WRITE(20,"('Y_COORDINATES ',i0,' ',(a))") u%dimensions(2), u%y%datatype
+  WRITE(20,"(*(es13.6))") u%y%coord
+  WRITE(20,"('Z_COORDINATES ',i0,' ',(a))") u%dimensions(3), u%z%datatype
+  WRITE(20,"(*(es13.6))") u%z%coord
+
+  CLOSE(20)
+  OPEN (20, file='rectlnr_grid.vtk', form='formatted', status='old')
   CALL v%rectlnr_grid_read(20)
-  PRINT*, u%check_for_diffs_rectlnr_grid(v)," <-- should be F"
+  PRINT*, diff(u,v)," <-- should be F"
 END
