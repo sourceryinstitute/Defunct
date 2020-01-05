@@ -1,35 +1,22 @@
-module foo
   implicit none
-  
-  type :: Wrapper_2d
-     class(*), allocatable :: elements(:,:)
-  end type Wrapper_2d
 
-  interface Wrapper
-     module procedure new_wrapper_2d
-  end interface Wrapper
-
-contains
-
-  function new_wrapper_2d(array) result(w)
-    type(Wrapper_2d) :: w
-    class(*), intent(in) :: array(:,:)
-
-    w%elements = array
-  end function new_wrapper_2d
-
-end module foo
-
-program main
-  use foo
-  implicit none
+  type Wrapper
+    class(*), allocatable :: elements(:)
+  end type
 
   class(*), allocatable :: obj
-  type(Wrapper_2d) :: w
-  integer :: expected(3,4)
+  type(Wrapper) w
+  integer :: expected(1)=1
 
-  expected = 1
-  w = Wrapper(expected)
+  w = new_wrapper(expected)
+  ! The following assignment causes a segmentation fault at runtime:
   obj = w
-
-end program main
+  ! The following assignment generates an "undefined symbols" linker
+  ! error but only if the above "obj = w" assignment is removed:
+  obj =  new_wrapper(expected)
+contains
+  type(Wrapper) function new_wrapper(array)
+    class(*) array(:)
+    new_wrapper%elements = array
+  end function
+end
