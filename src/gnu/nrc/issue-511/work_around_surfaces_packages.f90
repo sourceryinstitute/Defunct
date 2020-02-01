@@ -1,6 +1,15 @@
+module assertion_interface
+  implicit none
+contains
+  subroutine assert(assertion, description)
+    logical, intent(in) :: assertion
+    character(len=*), intent(in) :: description
+    if (.not. assertion) error stop description
+  end subroutine
+end module
+
 module package_interface
   implicit none
-
 
   type package
     integer id
@@ -35,27 +44,49 @@ module surfaces_interface
 end module
 
 submodule(surfaces_interface) surfaces_implementation
+  use assertion_interface, only : assert
   implicit none
   type(surfaces), save :: singleton[*]
 contains
 
   module procedure get_surface_normal_spacing
-    integer b, d, f
+    integer i, b, d, f
 
-    associate( me => this_image() )
-      print*, "image", me, " halo_outbox allocated: ", allocated(singleton%halo_outbox)
+    associate( me => this_image(), ni => num_images() )
 
       do b=1,size(singleton%halo_outbox,1); do d=1,size(singleton%halo_outbox,2); do f=1,size(singleton%halo_outbox,3)
-        print *, allocated(singleton%halo_outbox(b,d,f)%flux_values), shape(singleton%halo_outbox(b,d,f)%flux_values)
-        print *, allocated(singleton%halo_outbox(b,d,f)%positions), shape(singleton%halo_outbox(b,d,f)%positions)
-        print *, singleton%halo_outbox(b,d,f)%positions, singleton%halo_outbox(b,d,f)%flux_values
+
+        call assert( &
+          allocated(singleton%halo_outbox(b,d,f)%flux_values) .and. size(singleton%halo_outbox(b,d,f)%flux_values)==3, &
+          "allocated(flux_values) .and. size(flux_values)==3" )
+
+        call assert( &
+          allocated(singleton%halo_outbox(b,d,f)%positions) .and. size(singleton%halo_outbox(b,d,f)%positions)==4, &
+          "allocated(positions) .and. size(positions)==4" )
+
+        call assert( &
+          all([singleton%halo_outbox(b,d,f)%positions==me*[5,4,3,2], singleton%halo_outbox(b,d,f)%flux_values==me*[6,6,6]]), &
+          "positions==me*[5,4,3,2] .and. flux_values==me*[6,6,6]" )
+
       end do; end do; end do
 
-      do b=1,size(singleton[1]%halo_outbox,1); do d=1,size(singleton[1]%halo_outbox,2); do f=1,size(singleton[1]%halo_outbox,3)
-        print *, allocated(singleton[1]%halo_outbox(b,d,f)%flux_values), shape(singleton[1]%halo_outbox(b,d,f)%flux_values)
-        print *, allocated(singleton[1]%halo_outbox(b,d,f)%positions), shape(singleton[1]%halo_outbox(b,d,f)%positions)
-        print *, singleton[1]%halo_outbox(b,d,f)%positions, singleton[1]%halo_outbox(b,d,f)%flux_values
+      do i=1,ni
+      do b=1,size(singleton[i]%halo_outbox,1); do d=1,size(singleton[i]%halo_outbox,2); do f=1,size(singleton[i]%halo_outbox,3)
+
+        call assert( &
+          allocated(singleton[i]%halo_outbox(b,d,f)%flux_values) .and. size(singleton[i]%halo_outbox(b,d,f)%flux_values)==3, &
+          "allocated(flux_values) .and. size(flux_values)==3" )
+
+        call assert( &
+          allocated(singleton[i]%halo_outbox(b,d,f)%positions) .and. size(singleton[i]%halo_outbox(b,d,f)%positions)==4, &
+          "allocated(positions) .and. size(positions)==4" )
+
+        call assert( &
+        all([singleton[i]%halo_outbox(b,d,f)%positions==i*[5,4,3,2], singleton[i]%halo_outbox(b,d,f)%flux_values==i*[6,6,6]]), &
+          "positions==i*[5,4,3,2] .and. flux_values==i*[6,6,6]" )
+
       end do; end do; end do
+      end do
    end associate
   end procedure
 
@@ -94,17 +125,22 @@ program main
   type(package), allocatable :: bare(:,:,:)
   integer i, j, k
 
-  allocate( bare(2,1,1) )
-  do i=1, size(bare,1)
-    do j=1, size(bare,2)
-      do k=1, size(bare,3)
-        bare(i,j,k)%id = i
-        bare(i,j,k)%positions =  [5,4,3,2]
-        bare(i,j,k)%flux_values =  [6,6,6]
+  associate( me=>this_image() )
+    allocate( bare(9,1,1) )
+    do i=1, size(bare,1)
+      do j=1, size(bare,2)
+        do k=1, size(bare,3)
+          bare(i,j,k)%id = i
+          bare(i,j,k)%positions =  me*[5,4,3,2]
+          bare(i,j,k)%flux_values =  me*[6,6,6]
+        end do
       end do
     end do
-  end do
+  end associate
 
   call global_grid%block_surfaces%set_halo_outbox(bare)
   call global_grid%block_surfaces%get_surface_normal_spacing
+
+  sync all
+  if (this_image()==1) print *,"Test passed"
 end program main
