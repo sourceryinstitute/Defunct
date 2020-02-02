@@ -29,7 +29,6 @@ module surface_packages
     end subroutine
 
     module subroutine get_surface_normal_spacing
-      implicit none
     end subroutine
   end interface
 
@@ -74,10 +73,11 @@ program main
   associate( me=>this_image() )
 
     allocate( bare(me,3,2) )
+
     do i=1, size(bare,1)
+      bare(i,:,:)%id = i
       do j=1, size(bare,2)
         do k=1, size(bare,3)
-          bare(i,j,k)%id = i
           bare(i,j,k)%positions =  reshape(me*[5,4,3,2], [2,1,1,2])
           allocate( bare(i,j,k)%surface_fluxes(1) )
           bare(i,j,k)%surface_fluxes(1)%normals = reshape(me*[6,6,6], [3,1])
