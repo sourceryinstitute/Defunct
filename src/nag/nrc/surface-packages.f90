@@ -59,7 +59,7 @@ contains
 end submodule
 
 program main
-  use surface_packages, only : problem_discretization, surfaces, package
+  use surface_packages, only : problem_discretization, package
   implicit none
   type(problem_discretization) global_grid
   type(package), allocatable :: bare(:,:,:)
