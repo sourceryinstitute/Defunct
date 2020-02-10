@@ -24,7 +24,7 @@ module surfaces_interface
   implicit none
 
   type surfaces
-    type(package), allocatable :: halo_outbox(:,:,:)
+    type(package), allocatable :: halo_outbox(:,:)
   contains
     procedure, nopass :: set_halo_outbox
     procedure, nopass :: get_surface_normal_spacing
@@ -50,59 +50,60 @@ submodule(surfaces_interface) surfaces_implementation
 contains
 
   module procedure get_surface_normal_spacing
-    integer i, b, d, f
+    integer i, b, d
 
     associate( me => this_image(), ni => num_images() )
 
-      do b=1,size(singleton%halo_outbox,1); do d=1,size(singleton%halo_outbox,2); do f=1,size(singleton%halo_outbox,3)
+      do b=1,size(singleton%halo_outbox,1); do d=1,size(singleton%halo_outbox,2)
 
         call assert( &
-          allocated(singleton%halo_outbox(b,d,f)%flux_values) .and. size(singleton%halo_outbox(b,d,f)%flux_values)==3, &
+          allocated(singleton%halo_outbox(b,d)%flux_values) .and. size(singleton%halo_outbox(b,d)%flux_values)==3, &
           "allocated(flux_values) .and. size(flux_values)==3" )
 
         call assert( &
-          allocated(singleton%halo_outbox(b,d,f)%positions) .and. size(singleton%halo_outbox(b,d,f)%positions)==4, &
+          allocated(singleton%halo_outbox(b,d)%positions) .and. size(singleton%halo_outbox(b,d)%positions)==4, &
           "allocated(positions) .and. size(positions)==4" )
 
         call assert( &
-          all([singleton%halo_outbox(b,d,f)%positions==me*[5,4,3,2], singleton%halo_outbox(b,d,f)%flux_values==me*[6,6,6]]), &
+          all([singleton%halo_outbox(b,d)%positions==me*[5,4,3,2], singleton%halo_outbox(b,d)%flux_values==me*[6,6,6]]), &
           "positions==me*[5,4,3,2] .and. flux_values==me*[6,6,6]" )
 
-      end do; end do; end do
+      end do; end do
 
       do i=1,ni
-      do b=1,size(singleton[i]%halo_outbox,1); do d=1,size(singleton[i]%halo_outbox,2); do f=1,size(singleton[i]%halo_outbox,3)
+      do b=1,size(singleton[i]%halo_outbox,1); do d=1,size(singleton[i]%halo_outbox,2)
 
         call assert( &
-          allocated(singleton[i]%halo_outbox(b,d,f)%flux_values) .and. size(singleton[i]%halo_outbox(b,d,f)%flux_values)==3, &
+          allocated(singleton[i]%halo_outbox(b,d)%flux_values) .and. size(singleton[i]%halo_outbox(b,d)%flux_values)==3, &
           "allocated(flux_values) .and. size(flux_values)==3" )
 
         call assert( &
-          allocated(singleton[i]%halo_outbox(b,d,f)%positions) .and. size(singleton[i]%halo_outbox(b,d,f)%positions)==4, &
+          allocated(singleton[i]%halo_outbox(b,d)%positions) .and. size(singleton[i]%halo_outbox(b,d)%positions)==4, &
           "allocated(positions) .and. size(positions)==4" )
 
         call assert( &
-        all([singleton[i]%halo_outbox(b,d,f)%positions==i*[5,4,3,2], singleton[i]%halo_outbox(b,d,f)%flux_values==i*[6,6,6]]), &
+        all([singleton[i]%halo_outbox(b,d)%positions==i*[5,4,3,2], singleton[i]%halo_outbox(b,d)%flux_values==i*[6,6,6]]), &
           "positions==i*[5,4,3,2] .and. flux_values==i*[6,6,6]" )
 
-      end do; end do; end do
+      end do; end do
       end do
    end associate
   end procedure
 
   module procedure set_halo_outbox
-    integer b,d,f
+    integer b,d
 
-    allocate( singleton%halo_outbox(size(my_halo_outbox,1), size(my_halo_outbox,2), size(my_halo_outbox,3)) )
+    allocate( singleton%halo_outbox( 1, 1) )
 
-    do b=1,size(my_halo_outbox,1)
-      do d=1,size(my_halo_outbox,2)
-        do f=1,size(my_halo_outbox,3)
-          singleton%halo_outbox(b,d,f)%flux_values = my_halo_outbox(b,d,f)%flux_values
-          singleton%halo_outbox(b,d,f)%positions = my_halo_outbox(b,d,f)%positions
-        end do
-      end do
-    end do
+   !print *,size(my_halo_outbox)
+
+   ! do b=1,size(singleton%halo_outbox,1)
+   !   do d=1,size(singleton%halo_outbox,2)
+   !     singleton%halo_outbox(b,d)%id = 0
+   !     singleton%halo_outbox(b,d)%flux_values = this_image()*[6,6,6] ! my_halo_outbox(b,d)%flux_values
+   !     singleton%halo_outbox(b,d)%positions = this_image()*[5,4,3,2] ! my_halo_outbox(b,d)%positions
+   !   end do
+   ! end do
 
     sync all
   end procedure
@@ -139,7 +140,7 @@ program main
   end associate
 
   call global_grid%block_surfaces%set_halo_outbox(bare)
-  call global_grid%block_surfaces%get_surface_normal_spacing
+  !call global_grid%block_surfaces%get_surface_normal_spacing
 
   sync all
   if (this_image()==1) print *,"Test passed"
