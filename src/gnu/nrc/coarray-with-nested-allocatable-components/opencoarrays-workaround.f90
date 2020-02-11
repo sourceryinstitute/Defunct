@@ -102,7 +102,8 @@ program main
 
   type(surfaces) block_surfaces
 
-  integer, parameter :: source_image=6
+  integer, parameter :: source_image=1
+  if (source_image>num_images()) error stop "insufficient number of images: decrease source_image or launch more images"
 
   call block_surfaces%define_block_surface_fluxes( source_image )
   call block_surfaces%get_halo_positions( source_image )
