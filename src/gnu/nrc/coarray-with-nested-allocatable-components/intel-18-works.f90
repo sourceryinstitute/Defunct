@@ -49,8 +49,8 @@ contains
             do f=1,size(singleton[i]%halo_outbox,3)
               if ( .not. all([singleton[i]%halo_outbox(b,d,f)%positions == positions]) ) error stop "positions"
               if ( .not. all([singleton[i]%halo_outbox(b,d,f)%surface_fluxes(1)%normals == normals] ) )  error stop "normals"
-            end do 
-          end do 
+            end do
+          end do
         end do
       end associate
     end do
@@ -64,7 +64,7 @@ contains
 end submodule
 
 program main
-  use surface_packages, only : problem_discretization, surfaces, package
+  use surface_packages, only : problem_discretization, package
   implicit none
   type(problem_discretization) global_grid
   type(package), allocatable :: bare(:,:,:)
