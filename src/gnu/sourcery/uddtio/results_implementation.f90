@@ -18,9 +18,6 @@ contains
     new_results_t%body = body
   end procedure
 
-  module procedure states_t_array
-  end procedure
-
   module procedure norm
     norm_of_this = maxval(abs(this%body))
   end procedure
