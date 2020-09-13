@@ -1,8 +1,6 @@
 submodule(results_interface) results_implementation
   implicit none
-
 contains
-
   module procedure write_formatted
     integer i
 
@@ -11,15 +9,6 @@ contains
     do i=1,size(this%body,1)
       write(unit,*) this%body(i,:), new_line('a')
     end do
-  end procedure
-
-  module procedure new_results_t
-    new_results_t%header = header
-    new_results_t%body = body
-  end procedure
-
-  module procedure norm
-    norm_of_this = maxval(abs(this%body))
   end procedure
 
   module procedure subtract

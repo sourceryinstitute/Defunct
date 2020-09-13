@@ -11,20 +11,8 @@ module results_interface
     real(rkind), allocatable :: body(:,:)
   contains
     procedure :: write_formatted
-    procedure :: norm
     procedure :: subtract
   end type
-
-  interface results_t
-
-    pure module function new_results_t(header, body)
-      implicit none
-      character(len=*), intent(in) :: header(:)
-      real(rkind), intent(in) :: body(:,:)
-      type(results_t) new_results_t
-    end function
-
-  end interface
 
   interface
 
@@ -37,13 +25,6 @@ module results_interface
       integer, intent(out) :: iostat
       character(len=*), intent(inout) :: iomsg
     end subroutine
-
-    pure module function norm(this) result(norm_of_this)
-      !! result is a norm of the array formed by concatenating the real components of this object
-      implicit none
-      class(results_t), intent(in) :: this
-      real(rkind) norm_of_this
-    end function
 
     module function subtract(this, rhs) result(difference)
       !! result has components corresponding to subtracting rhs's components fron this object's components
