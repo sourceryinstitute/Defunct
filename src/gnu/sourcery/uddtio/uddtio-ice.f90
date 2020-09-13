@@ -35,11 +35,6 @@ module object_interface
     end function
   end interface
 
-end module
-module results_interface
-  use object_interface, only : object, oracle
-  implicit none
-
   type, public, extends(oracle) :: results_t
     character(len=:), allocatable :: header(:)
     real, allocatable :: body(:,:)
@@ -69,9 +64,9 @@ module results_interface
 
   end interface
 
-end module results_interface
+end module
 
-  use results_interface, only : results_t
+  use object_interface, only : results_t
   type(results_t) actual, expected
   write(*,*) actual - expected
 end program
