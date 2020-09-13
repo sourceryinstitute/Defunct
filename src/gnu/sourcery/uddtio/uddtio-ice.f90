@@ -12,9 +12,8 @@ module object_interface
       import object
       implicit none
       class(object), intent(in) :: this
-      integer, intent(in) :: unit
+      integer, intent(in) :: unit, vlist(:)
       character(len=*), intent(in) :: iotype
-      integer, intent(in) :: vlist(:)
       integer, intent(out) :: iostat
       character(len=*), intent(inout) :: iomsg
     end subroutine
@@ -35,9 +34,7 @@ module object_interface
     end function
   end interface
 
-  type, public, extends(oracle) :: results_t
-    character(len=:), allocatable :: header(:)
-    real, allocatable :: body(:,:)
+  type, extends(oracle) :: results_t
   contains
     procedure :: write_formatted
     procedure :: subtract
@@ -48,9 +45,8 @@ module object_interface
     module subroutine write_formatted(this, unit, iotype, vlist, iostat, iomsg)
       implicit none
       class(results_t), intent(in) :: this
-      integer, intent(in) :: unit
+      integer, intent(in) :: unit, vlist(:)
       character(len=*), intent(in) :: iotype
-      integer, intent(in) :: vlist(:)
       integer, intent(out) :: iostat
       character(len=*), intent(inout) :: iomsg
     end subroutine
