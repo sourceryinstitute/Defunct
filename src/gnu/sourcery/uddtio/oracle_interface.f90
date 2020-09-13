@@ -1,6 +1,5 @@
 module oracle_interface
   use object_interface, only : object
-  use kind_parameters, only : rkind
   implicit none
 
   private

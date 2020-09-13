@@ -1,6 +1,5 @@
 module results_interface
   use oracle_interface, only : oracle
-  use kind_parameters, only : rkind
   implicit none
 
   private
@@ -8,7 +7,7 @@ module results_interface
   type, public, extends(oracle) :: results_t
     private
     character(len=:), allocatable :: header(:)
-    real(rkind), allocatable :: body(:,:)
+    real, allocatable :: body(:,:)
   contains
     procedure :: write_formatted
     procedure :: subtract
