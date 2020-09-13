@@ -21,27 +21,26 @@ module object_interface
 
   type, abstract, extends(object) :: oracle
   contains
-    procedure(subtract_interface), deferred :: subtract
-    generic :: operator(-) => subtract
+    procedure(negative_interface), deferred :: negative
+    generic :: operator(-) => negative
   end type
 
   abstract interface
-    function subtract_interface(this, rhs) result(difference)
+    function negative_interface(this)
       import oracle
       implicit none
-      class(oracle), intent(in) :: this, rhs
-      class(oracle), allocatable :: difference
+      class(oracle), intent(in) :: this
+      class(oracle), allocatable :: negative_interface
     end function
   end interface
 
   type, extends(oracle) :: results_t
   contains
-    procedure :: write_formatted
-    procedure :: subtract
+    procedure write_formatted
+    procedure negative
   end type
 
   interface
-
     module subroutine write_formatted(this, unit, iotype, vlist, iostat, iomsg)
       implicit none
       class(results_t), intent(in) :: this
@@ -50,19 +49,14 @@ module object_interface
       integer, intent(out) :: iostat
       character(len=*), intent(inout) :: iomsg
     end subroutine
-
-    module function subtract(this, rhs) result(difference)
+    module function negative(this)
       implicit none
       class(results_t), intent(in) :: this
-      class(oracle), intent(in) :: rhs
-      class(oracle), allocatable :: difference
+      class(oracle), allocatable :: negative
     end function
-
   end interface
-
 end module
 
-  use object_interface, only : results_t
-  type(results_t) actual, expected
-  write(*,*) actual - expected
+  use object_interface
+  write(*,*) -results_t()
 end program
