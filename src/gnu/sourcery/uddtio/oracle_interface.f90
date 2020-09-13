@@ -2,9 +2,6 @@ module oracle_interface
   use object_interface, only : object
   implicit none
 
-  private
-  public :: oracle
-
   type, abstract, extends(object) :: oracle
   contains
     procedure(subtract_interface), deferred :: subtract

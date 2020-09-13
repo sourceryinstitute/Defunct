@@ -2,10 +2,7 @@ module results_interface
   use oracle_interface, only : oracle
   implicit none
 
-  private
-
   type, public, extends(oracle) :: results_t
-    private
     character(len=:), allocatable :: header(:)
     real, allocatable :: body(:,:)
   contains
@@ -26,7 +23,6 @@ module results_interface
     end subroutine
 
     module function subtract(this, rhs) result(difference)
-      !! result has components corresponding to subtracting rhs's components fron this object's components
       implicit none
       class(results_t), intent(in) :: this
       class(oracle), intent(in) :: rhs
