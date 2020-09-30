@@ -18,11 +18,9 @@ module results_interface
             real :: max_filtered_normalized_distance
         end function
     end interface
-end module
 
-submodule (results_interface) results_implementation
-    implicit none
 contains
+
     module procedure max_filtered_normalized_distance
         integer, parameter :: mdotos_column=4, thrust_column=5
         real, allocatable :: rhs_filtered(:,:)
@@ -32,4 +30,5 @@ contains
 
         max_filtered_normalized_distance = maxval(rhs%output)
     end procedure
-end submodule
+
+end module
