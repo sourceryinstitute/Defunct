@@ -8,6 +8,5 @@
 
   type(package) mail[*], halo_data
 
-  halo_data%surface_fluxes(1)%normals = 1
   mail = halo_data
 end
